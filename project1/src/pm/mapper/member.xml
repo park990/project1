@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="member">
+
+    <select id="st_login" resultType="pm.vo.memberVO" parameterType="Map">
+        select * from member_t where mem_id =#{ID} and mem_pw =#{PW} and adno is null;
+    </select>
+
+    <select id="adm_login" resultType="pm.vo.memberVO" parameterType="Map">
+        select * from member_t where mem_id =#{ID} and mem_pw =#{PW} and stdno is null;
+    </select>
+
+<!--*************************************** 여기서 부터는 findFrame에 들어갈 sql************************************************************************-->
+
+    <!--학생의 정보 찾기********************************-->
+
+    <select id="find_st_ID" resultType="pm.vo.memberVO" parameterType="String">
+        select mem_id from member_t where backupCode =#{n} and adno is null;
+    </select>
+
+    <select id="find_st_PW" resultType="pm.vo.memberVO" parameterType="Map">
+        select mem_pw from member_t where backupcode=#{bc} and mem_id=#{ID} and adno is null;
+    </select>
+
+
+
+    <!--강사의 정보 찾기********************************-->
+
+    <select id="find_ad_ID" resultType="pm.vo.memberVO" parameterType="String">
+        select mem_id from member_t where backupCode =#{n} and stdno is null;
+    </select>
+
+    <select id="find_ad_PW" resultType="pm.vo.memberVO" parameterType="Map">
+        select mem_pw from member_t where backupcode=#{bc} and mem_id=#{ID} and stdno is null;
+    </select>
+</mapper>
+
+
+
