@@ -244,14 +244,6 @@ public class SignUP_new extends JFrame {
                             "아이디는 영문자와 숫자만을 포함합니다.\r\n다시 입력해주세요.");
                 }
 
-                //아이디 중복 시 수행
-                if(!(input == null))
-                id_tf.setForeground(Color.RED);
-                JOptionPane.showMessageDialog(null, "이미 가입된 아이디입니다.");
-                //텍스트 초기화
-                id_tf.setText("");
-                id_tf.setForeground(Color.BLACK);
-
                 try {
                     //사용자 입력 값 가져오기
                     String mem_id = new String(id_tf.getText());
@@ -285,12 +277,24 @@ public class SignUP_new extends JFrame {
                     mvo.setMem_address(mem_address);//멤버 address 추가
 
                     //Mybatis 설정
-                    Reader r = Resources.getResourceAsReader("am/config/conf.xml");
-                    System.out.println(Resources.getResourceAsStream("am/mapper/member.xml"));
+                    Reader r = Resources.getResourceAsReader("pm/config/conf.xml");
+                    System.out.println(Resources.getResourceAsStream("pm/mapper/member.xml"));
                     SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(r);
                     r.close();
 
-                    SqlSession ss = factory.openSession(true);
+                    SqlSession ss = factory.openSession();
+
+                    int idCheck = ss.selectOne("member.checkId", mem_id);
+                    if(idCheck > 0) {
+                        id_tf.setForeground(Color.RED);
+                        id_tf.setFont(new Font("맑은 고딕", Font.BOLD, 13));
+                        JOptionPane.showMessageDialog(SignUP_new.this,
+                                "이미 존재하는 아이디입니다. 다른 아이디를 입력해주세요.");
+                        id_tf.setText(""); //텍스트 초기화
+                        id_tf.setForeground(Color.BLACK);
+                        return;
+                    }
+
                     if(adminUser_box.isSelected()) {
                         //mem_t 테이블에서 정보를 가져와서
                         // std_t 테이블에 값 설정
@@ -318,30 +322,25 @@ public class SignUP_new extends JFrame {
                         }
 
                     }
-                    int res = ss.insert("member.insertMember", mvo);
-                    ss.close();
 
+                    int res = ss.insert("member.insertMember", mvo);
                     if(res > 0) {
                         JOptionPane.showMessageDialog(SignUP_new.this,
                                 "회원가입 성공!");
                         ss.commit();
-                        close();
+                        close(); //창 종료
                     } else {
                         JOptionPane.showMessageDialog(SignUP_new.this,
                                 "회원가입 실패!");
                         ss.rollback();
                     }
-
                 } catch (Exception ex) {
                     ex.printStackTrace();
                     JOptionPane.showMessageDialog(SignUP_new.this,
                             "에러 발생: " + ex.getMessage());
                 }
-
-                //강사용 계정 체크박스 선택 시
-//                if(adminUser_box.isSelected())
-                    //
             }
+
         });
         //취소버튼 눌렀을때 수행
         cancel_bt.addActionListener(new ActionListener() {

@@ -5,11 +5,11 @@
 
 <mapper namespace="member">
 
-    <select id="st_login" resultType="pm.vo.memberVO" parameterType="Map">
+    <select id="st_login" resultType="pm.vo.MemberVO" parameterType="Map">
         select * from member_t where mem_id =#{ID} and mem_pw =#{PW} and adno is null;
     </select>
 
-    <select id="adm_login" resultType="pm.vo.memberVO" parameterType="Map">
+    <select id="adm_login" resultType="pm.vo.MemberVO" parameterType="Map">
         select * from member_t where mem_id =#{ID} and mem_pw =#{PW} and stdno is null;
     </select>
 
@@ -17,11 +17,11 @@
 
     <!--학생의 정보 찾기********************************-->
 
-    <select id="find_st_ID" resultType="pm.vo.memberVO" parameterType="String">
+    <select id="find_st_ID" resultType="pm.vo.MemberVO" parameterType="String">
         select mem_id from member_t where backupCode =#{n} and adno is null;
     </select>
 
-    <select id="find_st_PW" resultType="pm.vo.memberVO" parameterType="Map">
+    <select id="find_st_PW" resultType="pm.vo.MemberVO" parameterType="Map">
         select mem_pw from member_t where backupcode=#{bc} and mem_id=#{ID} and adno is null;
     </select>
 
@@ -29,16 +29,16 @@
 
     <!--강사의 정보 찾기********************************-->
 
-    <select id="find_ad_ID" resultType="pm.vo.memberVO" parameterType="String">
+    <select id="find_ad_ID" resultType="pm.vo.MemberVO" parameterType="String">
         select mem_id from member_t where backupCode =#{n} and stdno is null;
     </select>
 
-    <select id="find_ad_PW" resultType="pm.vo.memberVO" parameterType="Map">
+    <select id="find_ad_PW" resultType="pm.vo.MemberVO" parameterType="Map">
         select mem_pw from member_t where backupcode=#{bc} and mem_id=#{ID} and stdno is null;
     </select>
 
-    <insert id="insertMember" parameterType="am.vo.MemberVO">
-        INSERT INTO mem_t (
+    <insert id="insertMember" parameterType="pm.vo.MemberVO">
+        INSERT INTO member_t (
         mem_id, mem_pw, mem_quit, mem_joindate, mem_role,
         mem_name, mem_gender, mem_phone, mem_birth, mem_bkCode,
         mem_email, mem_address)
@@ -47,6 +47,11 @@
         #{mem_name}, #{mem_gender}, #{mem_phone}, #{mem_birth}, #{mem_bkCode},
         #{mem_email}, #{mem_address})
     </insert>
+
+    <!--중복된 id 검색**********************************-->
+    <select id = "checkId" resultType="int" parameterType="String">
+        SELECT COUNT(*) FROM member_t WHERE mem_id = #{mem_id}
+    </select>
 </mapper>
 
 
