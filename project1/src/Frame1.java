@@ -70,7 +70,7 @@ public class Frame1 extends JFrame {
         signupB.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                new SignUP_new();
             }
         });
 

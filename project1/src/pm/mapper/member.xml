@@ -36,6 +36,17 @@
     <select id="find_ad_PW" resultType="pm.vo.memberVO" parameterType="Map">
         select mem_pw from member_t where backupcode=#{bc} and mem_id=#{ID} and stdno is null;
     </select>
+
+    <insert id="insertMember" parameterType="am.vo.MemberVO">
+        INSERT INTO mem_t (
+        mem_id, mem_pw, mem_quit, mem_joindate, mem_role,
+        mem_name, mem_gender, mem_phone, mem_birth, mem_bkCode,
+        mem_email, mem_address)
+        VALUES (
+        #{mem_id}, #{mem_pw}, #{mem_quit}, NOW(), #{mem_role},
+        #{mem_name}, #{mem_gender}, #{mem_phone}, #{mem_birth}, #{mem_bkCode},
+        #{mem_email}, #{mem_address})
+    </insert>
 </mapper>
 
 

@@ -2,8 +2,7 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import pm.vo.memberVO;
-import pm.vo.teachersVO;
+import pm.vo.MemberVO;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,6 +14,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
+
 
 public class LoginFrame extends JFrame {
     JPanel north_p, Np1;
@@ -160,7 +160,7 @@ public class LoginFrame extends JFrame {
         m.put("ID", idstring);
         m.put("PW", pwstring);   //map 으로 하고 픈데
 
-        memberVO vo = ss.selectOne(target, m);
+        MemberVO vo = ss.selectOne(target, m);
 
         if (vo == null) {
 

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="admin">
+    <insert id="insertAdmin" parameterType="am.vo.AdminVO"
+            useGeneratedKeys="true" keyProperty="adno">
+        INSERT INTO admin_t (adno, ad_name, ad_address, ad_phone, ad_email)
+        VALUES (#{adno}, #{ad_name}, #{ad_address}, #{ad_phone}, #{ad_email})
+    </insert>
+
+    <insert id="insertStd" parameterType="am.vo.StudentVO"
+            useGeneratedKeys="true" keyProperty="stdno">
+        INSERT INTO std_t (std_name, std_address, std_phone, std_email)
+        VALUES (#{std_name}, #{std_address}, #{std_phone}, #{std_email})
+    </insert>
+</mapper>
