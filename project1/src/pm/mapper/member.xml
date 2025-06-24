@@ -50,7 +50,7 @@
 
     <!--중복된 id 검색**********************************-->
     <select id = "checkId" resultType="int" parameterType="String">
-        SELECT COUNT(*) FROM member_t WHERE mem_id = #{mem_id}
+        SELECT COUNT(*) FROM member_t WHERE mem_id = #{value}
     </select>
 </mapper>
 

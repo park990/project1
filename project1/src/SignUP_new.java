@@ -47,7 +47,7 @@ public class SignUP_new extends JFrame {
         this.setBounds(700, 200, 500, 450);
 
         // 중앙 패널 (8행 3열)
-        center_p = new JPanel(new GridLayout(12, 3, 10, 10));
+        center_p = new JPanel(new GridLayout(13, 3, 10, 10));
         center_p.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         // 바텀 패널
@@ -225,108 +225,149 @@ public class SignUP_new extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 //아이디 유효성 검사
                 String input = id_tf.getText().trim();
-                if (input.equals("")) { //공백일경우
-                    JOptionPane.showMessageDialog(null,
-                            "사용할 아이디를 입력해주세요");
-                } else if (!input.matches("^[a-zA-Z0-9]+$")) { //영어와 숫자가 아닐때
-                    JOptionPane.showMessageDialog(null,
-                            "아이디는 영문자와 숫자만을 포함합니다.\r\n다시 입력해주세요.");
+
+                //입력값 수집
+                String mem_id = id_tf.getText().trim();
+                String mem_pw = new String(pw_f.getPassword()).trim();
+                String mem_pw2 = new String(pwConfirm_tf.getPassword()).trim();
+                String mem_name = name_tf.getText().trim();
+                String phone1 = phone1_tf.getText().trim();
+                String phone2 = phone2_tf.getText().trim();
+                String phone3 = phone3_tf.getText().trim();
+                String mem_phone = phone1 + phone2 + phone3;
+
+                String year = (String) year_cmb.getSelectedItem();
+                String month = (String) month_cmb.getSelectedItem();
+                String day = (String) day_cmb.getSelectedItem();
+
+                String mem_birth = null;
+                if (year != null && month != null && day != null) {
+                    mem_birth = year.replace("년", "") + "-"
+                            + String.format("%02d", Integer.parseInt(month.replace("월", ""))) + "-"
+                            + String.format("%02d", Integer.parseInt(day.replace("일", "")));
                 }
 
-                try {
-                    //사용자 입력 값 가져오기
-                    String mem_id = new String(id_tf.getText());
-                    String mem_pw = new String(pw_f.getPassword());
-                    System.out.println("패스워드: " + mem_pw); //패스워드 확인
-                    String mem_name = new String(name_tf.getText());
-                    String year = year_cmb.getSelectedItem().toString().replace("년", "");
-                    String month = month_cmb.getSelectedItem().toString().replace("월", "");
-                    String day = day_cmb.getSelectedItem().toString().replace("일", "");
-                    String mem_birth = year + "-" + String.format("%02d", Integer.parseInt(month))
-                            + "-" + String.format("%02d", Integer.parseInt(day));
-                    String mem_phone = new String(phone1_tf.getText() + phone2_tf.getText()
-                            + phone3_tf.getText());
-                    String mem_gender = male_rbt.isSelected() ? "M" : "F"; //"M" : 남성, "F" : 여성
-                    String mem_role = adminUser_box.isSelected() ? "A" : "S"; //강사용, 학생
-                    String mem_email = email_tf.getText().trim(); //멤버 email 가져오기
-                    String mem_address = address_tf.getText().trim(); //멤버 address 가져오기
+                //성별
+                String mem_gender = male_rbt.isSelected() ? "M" : "F";
+                //역할
+                String mem_role = adminUser_box.isSelected() ? "A" : "S";
+                //이메일, 주소
+                String mem_email = email_tf.getText().trim();
+                String mem_address = phone1_tf.getText().trim();
+                String mem_bkCode = bkCode_tf.getText().trim();
 
-                    //vo객체 생성 및 값 설정
-                    MemberVO mvo = new MemberVO();
-                    mvo.setMem_id(mem_id); //아이디
-                    mvo.setMem_pw(mem_pw); //패스워드
-                    mvo.setMem_name(mem_name); //이름
-                    mvo.setMem_quit("N"); //탈퇴여부, "N" : 탈퇴x
-                    mvo.setMem_gender(mem_gender); //성별, "M" : 남성, Default : "M"
-                    mvo.setMem_birth(mem_birth); //생년월일
-                    mvo.setMem_phone(mem_phone); //전화번호
-                    mvo.setMem_bkCode(bkCode_tf.getText()); //백업코드
-                    mvo.setMem_role(mem_role); //사용자 유형, 강사인지? 학생인지?
-                    mvo.setMem_email(mem_email);//멤버 email 추가
-                    mvo.setMem_address(mem_address);//멤버 address 추가
+                //유효성 검사
+                if(mem_id.isEmpty())
 
-                    //Mybatis 설정
 
-                    factory_open();
-
-                    SqlSession ss = factory.openSession();
-
-                    int idCheck = ss.selectOne("member.checkId", mem_id);
-                    if (idCheck > 0) {
-                        id_tf.setForeground(Color.RED);
-                        id_tf.setFont(new Font("맑은 고딕", Font.BOLD, 13));
-                        JOptionPane.showMessageDialog(SignUP_new.this,
-                                "이미 존재하는 아이디입니다. 다른 아이디를 입력해주세요.");
-                        id_tf.setText(""); //텍스트 초기화
-                        id_tf.setForeground(Color.BLACK);
+                if(id_tf.getText().length() < 1 || pw_f.getText().length() < 1 ||
+                        name_tf.getText().length() < 1 || phone1_tf.getText().length() < 1 ||
+                        phone2_tf.getText().length() < 1 || phone3_tf.getText().length() < 1) {
+                } else {
+                    if (input.equals("")) { //공백일경우
+                        JOptionPane.showMessageDialog(null,
+                                "사용할 아이디를 입력해주세요");
+                        return;
+                    } else if (!input.matches("^[a-zA-Z0-9]+$")) { //영어와 숫자가 아닐때
+                        JOptionPane.showMessageDialog(null,
+                                "아이디는 영문자와 숫자만을 포함합니다.\r\n다시 입력해주세요.");
                         return;
                     }
 
-                    if (adminUser_box.isSelected()) {
-                        //mem_t 테이블에서 정보를 가져와서
-                        // std_t 테이블에 값 설정
-                        // admin_t 테이블에 값 설정
-                        if (mem_role.equals("S")) { //회원이 학생일경우 수행한다.
-                            StudentVO svo = new StudentVO();
-                            svo.setStd_name(mem_name);
-                            svo.setStd_phone(mem_phone);
-                            svo.setStd_address(mem_address);
-                            svo.setStd_email(mem_email);
-                            ss.insert("student.insertStd", svo);
-                            String str = svo.getStdno();
-                            mvo.setStdno(str);
-                        } else { //강사일경우 수행한다.
-                            AdminVO avo = new AdminVO();
-                            avo.setAd_name(mem_name);
-                            avo.setAd_phone(mem_phone);
-                            avo.setAd_address(mem_address);
-                            avo.setAd_email(mem_email);
+                    try {
+                        //사용자 입력 값 가져오기
+                        String mem_id = new String(id_tf.getText());
+                        String mem_pw = new String(pw_f.getPassword());
+                        System.out.println("패스워드: " + mem_pw); //패스워드 확인
+                        String mem_name = new String(name_tf.getText());
+                        String year = year_cmb.getSelectedItem().toString().replace("년", "");
+                        String month = month_cmb.getSelectedItem().toString().replace("월", "");
+                        String day = day_cmb.getSelectedItem().toString().replace("일", "");
+                        String mem_birth = year + "-" + String.format("%02d", Integer.parseInt(month))
+                                + "-" + String.format("%02d", Integer.parseInt(day));
+                        String mem_phone = new String(phone1_tf.getText() + phone2_tf.getText()
+                                + phone3_tf.getText());
+                        String mem_gender = male_rbt.isSelected() ? "M" : "F"; //"M" : 남성, "F" : 여성
+                        String mem_role = adminUser_box.isSelected() ? "A" : "S"; //강사용, 학생
+                        String mem_email = email_tf.getText().trim(); //멤버 email 가져오기
+                        String mem_address = address_tf.getText().trim(); //멤버 address 가져오기
 
-                            ss.insert("admin.insertAdmin", avo);
-                            String str2 = avo.getAdno();
-                            mvo.setAdno(str2);
+                        //vo객체 생성 및 값 설정
+                        MemberVO mvo = new MemberVO();
+                        mvo.setMem_id(mem_id); //아이디
+                        mvo.setMem_pw(mem_pw); //패스워드
+                        mvo.setMem_name(mem_name); //이름
+                        mvo.setMem_quit("N"); //탈퇴여부, "N" : 탈퇴x
+                        mvo.setMem_gender(mem_gender); //성별, "M" : 남성, Default : "M"
+                        mvo.setMem_birth(mem_birth); //생년월일
+                        mvo.setMem_phone(mem_phone); //전화번호
+                        mvo.setMem_bkCode(bkCode_tf.getText()); //백업코드
+                        mvo.setMem_role(mem_role); //사용자 유형, 강사인지? 학생인지?
+                        mvo.setMem_email(mem_email);//멤버 email 추가
+                        mvo.setMem_address(mem_address);//멤버 address 추가
+
+                        //Mybatis 설정
+                        factory_open();
+
+                        SqlSession ss = factory.openSession();
+
+                        //아이디 중복 체크
+                        int idCheck = ss.selectOne("member.checkId", mem_id);
+                        if (idCheck > 0) {
+                            id_tf.setForeground(Color.RED);
+                            id_tf.setFont(new Font("맑은 고딕", Font.BOLD, 13));
+                            JOptionPane.showMessageDialog(SignUP_new.this,
+                                    "이미 존재하는 아이디입니다. 다른 아이디를 입력해주세요.");
+                            id_tf.setText(""); //텍스트 초기화
+                            id_tf.setForeground(Color.BLACK);
+                            return;
                         }
 
-                    }
+                        if (adminUser_box.isSelected()) {
+                            //mem_t 테이블에서 정보를 가져와서
+                            // std_t 테이블에 값 설정
+                            // admin_t 테이블에 값 설정
+                            if (mem_role.equals("S")) { //회원이 학생일경우 수행한다.
+                                StudentVO svo = new StudentVO();
+                                svo.setStd_name(mem_name);
+                                svo.setStd_phone(mem_phone);
+                                svo.setStd_address(mem_address);
+                                svo.setStd_email(mem_email);
+                                ss.insert("student.insertStd", svo);
+                                String str = svo.getStdno();
+                                mvo.setStdno(str);
+                            } else { //강사일경우 수행한다.
+                                AdminVO avo = new AdminVO();
+                                avo.setAd_name(mem_name);
+                                avo.setAd_phone(mem_phone);
+                                avo.setAd_address(mem_address);
+                                avo.setAd_email(mem_email);
 
-                    int res = ss.insert("member.insertMember", mvo);
-                    if (res > 0) {
+                                ss.insert("admin.insertAdmin", avo);
+                                String str2 = avo.getAdno();
+                                mvo.setAdno(str2);
+                            }
+
+                        }
+
+                        int res = ss.insert("member.insertMember", mvo);
+                        if (res > 0) {
+                            JOptionPane.showMessageDialog(SignUP_new.this,
+                                    "회원가입 성공!");
+                            ss.commit();
+                            close(); //창 종료
+                        } else {
+                            JOptionPane.showMessageDialog(SignUP_new.this,
+                                    "회원가입 실패!");
+                            ss.rollback();
+                        }
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
                         JOptionPane.showMessageDialog(SignUP_new.this,
-                                "회원가입 성공!");
-                        ss.commit();
-                        close(); //창 종료
-                    } else {
-                        JOptionPane.showMessageDialog(SignUP_new.this,
-                                "회원가입 실패!");
-                        ss.rollback();
+                                "에러 발생: " + ex.getMessage());
                     }
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    JOptionPane.showMessageDialog(SignUP_new.this,
-                            "에러 발생: " + ex.getMessage());
                 }
             }
-
         });
         //취소버튼 눌렀을때 수행
         cancel_bt.addActionListener(new ActionListener() {
@@ -339,7 +380,6 @@ public class SignUP_new extends JFrame {
 
     private void factory_open() throws IOException {
         Reader r = Resources.getResourceAsReader("pm/config/conf.xml");
-
         factory = new SqlSessionFactoryBuilder().build(r);
         r.close();
     }
