@@ -35,9 +35,9 @@ public class SignUP_new extends JFrame {
     ButtonGroup gender_group;
     //체크 박스
     JCheckBox adminUser_box;
-    StudentVO svo;
-    AdminVO avo;
+
     SqlSessionFactory factory;
+
     public SignUP_new() {
 
         // 프레임 설정
@@ -295,7 +295,7 @@ public class SignUP_new extends JFrame {
                         // std_t 테이블에 값 설정
                         // admin_t 테이블에 값 설정
                         if (mem_role.equals("S")) { //회원이 학생일경우 수행한다.
-                            svo = new StudentVO();
+                            StudentVO svo = new StudentVO();
                             svo.setStd_name(mem_name);
                             svo.setStd_phone(mem_phone);
                             svo.setStd_address(mem_address);
@@ -304,7 +304,7 @@ public class SignUP_new extends JFrame {
                             String str = svo.getStdno();
                             mvo.setStdno(str);
                         } else { //강사일경우 수행한다.
-                            avo = new AdminVO();
+                            AdminVO avo = new AdminVO();
                             avo.setAd_name(mem_name);
                             avo.setAd_phone(mem_phone);
                             avo.setAd_address(mem_address);
@@ -343,7 +343,7 @@ public class SignUP_new extends JFrame {
                 close();
             }
         });
-    
+    }
 
     private void factory_open() throws IOException {
         Reader r = Resources.getResourceAsReader("pm/config/conf.xml");
