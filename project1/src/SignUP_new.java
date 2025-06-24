@@ -40,12 +40,6 @@ public class SignUP_new extends JFrame {
     SqlSessionFactory factory;
     public SignUP_new() {
 
-        //UI세팅
-        initUI();
-
-    }
-
-    private void initUI() {
         // 프레임 설정
         this.setTitle("회원가입");
         this.setLayout(new BorderLayout());
@@ -53,7 +47,7 @@ public class SignUP_new extends JFrame {
 
         // 중앙 패널 (8행 3열)
         center_p = new JPanel(new GridLayout(12, 3, 10, 10));
-        center_p.setBorder(BorderFactory.createEmptyBorder(20, 20, 20,20));
+        center_p.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         // 바텀 패널
         center_p.setBorder(BorderFactory.createEmptyBorder(
@@ -239,10 +233,10 @@ public class SignUP_new extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 //아이디 유효성 검사
                 String input = id_tf.getText().trim();
-                if(input.equals("")) { //공백일경우
+                if (input.equals("")) { //공백일경우
                     JOptionPane.showMessageDialog(null,
                             "사용할 아이디를 입력해주세요");
-                } else if(!input.matches("^[a-zA-Z0-9]+$")) { //영어와 숫자가 아닐때
+                } else if (!input.matches("^[a-zA-Z0-9]+$")) { //영어와 숫자가 아닐때
                     JOptionPane.showMessageDialog(null,
                             "아이디는 영문자와 숫자만을 포함합니다.\r\n다시 입력해주세요.");
                 }
@@ -255,11 +249,11 @@ public class SignUP_new extends JFrame {
                     String mem_name = new String(name_tf.getText());
                     String year = year_cmb.getSelectedItem().toString().replace("년", "");
                     String month = month_cmb.getSelectedItem().toString().replace("월", "");
-                    String day = day_cmb.getSelectedItem().toString().replace("일","");
+                    String day = day_cmb.getSelectedItem().toString().replace("일", "");
                     String mem_birth = year + "-" + String.format("%02d", Integer.parseInt(month))
-                                            + "-" + String.format("%02d", Integer.parseInt(day));
+                            + "-" + String.format("%02d", Integer.parseInt(day));
                     String mem_phone = new String(phone1_tf.getText() + phone2_tf.getText()
-                                                    + phone3_tf.getText());
+                            + phone3_tf.getText());
                     String mem_gender = male_rbt.isSelected() ? "M" : "F"; //"M" : 남성, "F" : 여성
                     String mem_role = adminUser_box.isSelected() ? "A" : "S"; //강사용, 학생
                     String mem_email = email_tf.getText().trim(); //멤버 email 가져오기
@@ -286,7 +280,7 @@ public class SignUP_new extends JFrame {
                     SqlSession ss = factory.openSession();
 
                     int idCheck = ss.selectOne("member.checkId", mem_id);
-                    if(idCheck > 0) {
+                    if (idCheck > 0) {
                         id_tf.setForeground(Color.RED);
                         id_tf.setFont(new Font("맑은 고딕", Font.BOLD, 13));
                         JOptionPane.showMessageDialog(SignUP_new.this,
@@ -296,11 +290,11 @@ public class SignUP_new extends JFrame {
                         return;
                     }
 
-                    if(adminUser_box.isSelected()) {
+                    if (adminUser_box.isSelected()) {
                         //mem_t 테이블에서 정보를 가져와서
                         // std_t 테이블에 값 설정
                         // admin_t 테이블에 값 설정
-                        if(mem_role.equals("S")) { //회원이 학생일경우 수행한다.
+                        if (mem_role.equals("S")) { //회원이 학생일경우 수행한다.
                             svo = new StudentVO();
                             svo.setStd_name(mem_name);
                             svo.setStd_phone(mem_phone);
@@ -324,7 +318,7 @@ public class SignUP_new extends JFrame {
                     }
 
                     int res = ss.insert("member.insertMember", mvo);
-                    if(res > 0) {
+                    if (res > 0) {
                         JOptionPane.showMessageDialog(SignUP_new.this,
                                 "회원가입 성공!");
                         ss.commit();
@@ -349,7 +343,8 @@ public class SignUP_new extends JFrame {
                 close();
             }
         });
-    } // 생t성자 마지막
+    
+
     private void factory_open() throws IOException {
         Reader r = Resources.getResourceAsReader("pm/config/conf.xml");
 
