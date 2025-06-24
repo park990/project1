@@ -122,17 +122,16 @@ public class SignUP_new extends JFrame {
 
         // 6. 성별
         gender_l = new JLabel("성별");
-        male_rbt = new JRadioButton("남성");
-        male_rbt.setSelected(true); //기본값: 남성 선택
-        female_rbt = new JRadioButton("여성");
         gender_group = new ButtonGroup();
-        gender_group.add(male_rbt); //남성 라디오 버튼을 그룹에 추가
-        gender_group.add(female_rbt); //여성 라디오 버튼을 그룹에 추가
+        gender_group.add(male_rbt=new JRadioButton("남성")); //남성 라디오 버튼을 그룹에 추가
+        male_rbt.setSelected(true); //기본값: 남성 선택
+        gender_group.add(female_rbt=new JRadioButton("여성")); //여성 라디오 버튼을 그룹에 추가
+
+
 
         gender_p = new JPanel(new FlowLayout(FlowLayout.LEFT));
         gender_p.add(male_rbt);
         gender_p.add(female_rbt);
-
         center_p.add(gender_l);
         center_p.add(gender_p);
         center_p.add(new JLabel());
@@ -225,6 +224,8 @@ public class SignUP_new extends JFrame {
 
         this.setBounds(350, 450, 650, 550);
         this.setVisible(true);
+
+
 
         //이벤트 감지자
         //가입버튼 눌렀을때 수행
