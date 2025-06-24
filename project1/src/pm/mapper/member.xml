@@ -18,11 +18,11 @@
     <!--학생의 정보 찾기********************************-->
 
     <select id="find_st_ID" resultType="pm.vo.MemberVO" parameterType="String">
-        select mem_id from member_t where backupCode =#{n} and adno is null;
+        select mem_id from member_t where mem_bkCode =#{n} and adno is null;
     </select>
 
     <select id="find_st_PW" resultType="pm.vo.MemberVO" parameterType="Map">
-        select mem_pw from member_t where backupCode=#{bc} and mem_id=#{ID} and adno is null;
+        select mem_pw from member_t where mem_bkCode=#{bc} and mem_id=#{ID} and adno is null;
     </select>
 
 
@@ -30,11 +30,11 @@
     <!--강사의 정보 찾기********************************-->
 
     <select id="find_ad_ID" resultType="pm.vo.MemberVO" parameterType="String">
-        select mem_id from member_t where backupCode =#{n} and stdno is null;
+        select mem_id from member_t where mem_bkCode =#{n} and stdno is null;
     </select>
 
     <select id="find_ad_PW" resultType="pm.vo.MemberVO" parameterType="Map">
-        select mem_pw from member_t where backupcode=#{bc} and mem_id=#{ID} and stdno is null;
+        select mem_pw from member_t where mem_bkCode=#{bc} and mem_id=#{ID} and stdno is null;
     </select>
 
     <insert id="insertMember" parameterType="pm.vo.MemberVO">

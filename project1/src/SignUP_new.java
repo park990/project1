@@ -7,6 +7,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 import javax.swing.*;
+import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -124,10 +125,22 @@ public class SignUP_new extends JFrame {
         gbc2.insets = new Insets(0, 2, 0, 2); //컴포넌트 주변 여백 설정
 
         phone_l = new JLabel("전화번호");
+
         phone1_tf = new JTextField(3); //전화번호 첫번째 세자리 필드 ex)010
         phone2_tf = new JTextField(4); //전화번호 두번째 세자리 필드 ex)1234
         phone3_tf = new JTextField(4); //전화번호 세번째 세자리 필드 ex)5678
         dash_l = new JLabel("-"); // 각 전화번호 필드를 이어줄 "-" 생성
+
+        phone1_tf = new JTextField(3);
+        phone1_tf.setDocument(new textFieldLimit(4));
+
+        phone2_tf = new JTextField(3);
+        phone2_tf.setDocument(new textFieldLimit(4));
+
+        phone3_tf = new JTextField(3);
+        phone3_tf.setDocument(new textFieldLimit(4));
+        dash_l = new JLabel("-");
+
         dash_2 = new JLabel("-");
 
         gbc2.gridx = 0; //0열에 컴포넌트 배치
@@ -155,6 +168,7 @@ public class SignUP_new extends JFrame {
         // 8. 백업코드
         bkCode_l = new JLabel("백업코드");
         bkCode_tf = new JTextField();
+        bkCode_tf.setEditable(false);
         bkCodeInfo_l = new JLabel("※ 아이디/패스워드를 찾을때 사용됩니다.");
         bkCodeInfo_l.setFont(new Font("맑은 고딕", Font.ITALIC, 10));
         bkCodeInfo_l.setForeground(Color.GRAY); //폰트색상 회색
