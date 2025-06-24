@@ -54,122 +54,99 @@ public class SignUP_new extends JFrame {
                 30, 20, 30, 20)); //안쪽 여백 지정
 
         // 1. 아이디
-        id_l = new JLabel("아이디");
-        id_tf = new JTextField();
-        center_p.add(id_l);
-        center_p.add(id_tf);
-        center_p.add(new JLabel());
+        center_p.add(id_l = new JLabel("아이디"));
+        center_p.add(id_tf = new JTextField());
+        center_p.add(new JLabel()); //1행,3열 공백
 
         // 2. 비밀번호
-        pw_l = new JLabel("비밀번호");
-        pw_f = new JPasswordField();
-        pwInfo_l = new JLabel("※ 영문+숫자 포함 8자 이상");
+        center_p.add(pw_l = new JLabel("비밀번호"));
+        center_p.add(pw_f = new JPasswordField());
+        center_p.add(pwInfo_l = new JLabel("※ 영문+숫자 포함 8자 이상"));
         pwInfo_l.setFont(new Font("맑은 고딕", Font.ITALIC, 10));
         pwInfo_l.setForeground(Color.GRAY);
 
-        center_p.add(pw_l);
-        center_p.add(pw_f);
-        center_p.add(pwInfo_l);
-
         // 3. 비밀번호 확인
-        pwConfirm_l = new JLabel("비밀번호 확인");
-        pwConfirm_tf = new JPasswordField();
-        center_p.add(pwConfirm_l);
-        center_p.add(pwConfirm_tf);
-        center_p.add(new JLabel());
+        center_p.add(pwConfirm_l = new JLabel("비밀번호 확인"));
+        center_p.add(pwConfirm_tf = new JPasswordField());
+        center_p.add(new JLabel()); //3행,3열 공백
 
         // 4. 이름
-        name_l = new JLabel("이름");
-        name_tf = new JTextField();
-        center_p.add(name_l);
-        center_p.add(name_tf);
-        center_p.add(new JLabel());
+        center_p.add(name_l = new JLabel("이름"));
+        center_p.add(name_tf = new JTextField());
+        center_p.add(new JLabel()); //4행,3열 공백
 
         // 5. 생년월일
         birth_l = new JLabel("생년월일");
         birth_tf = new JTextField();
-
-        year_cmb = new JComboBox<>();
-        month_cmb = new JComboBox<>();
-        day_cmb = new JComboBox<>();
-
-        Dimension cmbSize = new Dimension(100, 20);
-        year_cmb.setPreferredSize(cmbSize);
+        year_cmb = new JComboBox<>(); //[년도] 콤보박스
+        month_cmb = new JComboBox<>(); //[월] 콤보박스
+        day_cmb = new JComboBox<>(); //[일] 콤보박스
+        Dimension cmbSize = new Dimension(100, 30); //콤보박스 창 크기
+        year_cmb.setPreferredSize(cmbSize); //사이즈 설정
         month_cmb.setPreferredSize(cmbSize);
         day_cmb.setPreferredSize(cmbSize);
 
-        for (int i = 1980; i <= 2025; i++) year_cmb.addItem(i + "년");
-        for (int i = 1; i <= 12; i++) month_cmb.addItem(i + "월");
-        for (int i = 1; i <= 31; i++) day_cmb.addItem(i + "일");
+        for (int i = 1965; i <= 2025; i++) year_cmb.addItem(i + "년"); //1965~2025년생 선택 가능
+        for (int i = 1; i <= 12; i++) month_cmb.addItem(i + "월"); //1~12월
+        for (int i = 1; i <= 31; i++) day_cmb.addItem(i + "일"); //1~31일
 
-        birth_p = new JPanel(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(0, 2, 0, 2); //여백
-        gbc.gridx = 0;
-        birth_p.add(year_cmb, gbc);
-        gbc.gridx = 1;
-        birth_p.add(month_cmb, gbc);
-        gbc.gridx = 2;
-        birth_p.add(day_cmb, gbc);
+        birth_p = new JPanel(new GridBagLayout()); //패널을 그리드백 레이아웃 설정
+        GridBagConstraints gbc = new GridBagConstraints(); //각 컴포넌트 위치 및 여백을 설정하는 객체
+        gbc.insets = new Insets(0, 2, 0, 2); //컴포넌트 주변 여백 설정
+        gbc.gridx = 0; //0열에 컴포넌트 배치
+        birth_p.add(year_cmb, gbc); //[년도]콤보박스 -> 0번째 열에 추가
+        gbc.gridx = 1; //1열에 컴포넌트 배치
+        birth_p.add(month_cmb, gbc); //[년도]콤보박스 -> 1번째 열에 추가
+        gbc.gridx = 2; //2열에 컴포넌트 배치
+        birth_p.add(day_cmb, gbc); //[년도]콤보박스 -> 2번째 열에 추가
 
-        birth_p.add(year_cmb);
-        birth_p.add(month_cmb);
-        birth_p.add(day_cmb);
-
-        center_p.add(birth_l);
+        center_p.add(birth_l = new JLabel("생년월일"));
         center_p.add(birth_p);
-        center_p.add(new JLabel());
+        center_p.add(new JLabel()); //5행,3열 공백
 
         // 6. 성별
         gender_l = new JLabel("성별");
-        gender_group = new ButtonGroup();
-        gender_group.add(male_rbt=new JRadioButton("남성")); //남성 라디오 버튼을 그룹에 추가
-        male_rbt.setSelected(true); //기본값: 남성 선택
-        gender_group.add(female_rbt=new JRadioButton("여성")); //여성 라디오 버튼을 그룹에 추가
-
-
+        gender_group = new ButtonGroup(); //버튼 그룹 생성
+        gender_group.add(male_rbt=new JRadioButton("남성")); //[남성] 라디오버튼을 버튼그룹에 추가
+        male_rbt.setSelected(true); //기본값: [남성] 선택
+        gender_group.add(female_rbt=new JRadioButton("여성")); //[여성] 라디오버튼을 버튼그룹에 추가
 
         gender_p = new JPanel(new FlowLayout(FlowLayout.LEFT));
         gender_p.add(male_rbt);
         gender_p.add(female_rbt);
         center_p.add(gender_l);
         center_p.add(gender_p);
-        center_p.add(new JLabel());
+        center_p.add(new JLabel()); //6행,3열 공백
 
         // 7. 전화번호
         phone_p = new JPanel(new GridBagLayout());
-        GridBagConstraints gbc2 = new GridBagConstraints();
-        gbc2.insets = new Insets(0, 2, 0, 2); //여백
+        GridBagConstraints gbc2 = new GridBagConstraints(); //컴포넌트 위치,여백 설정하는 객체
+        gbc2.insets = new Insets(0, 2, 0, 2); //컴포넌트 주변 여백 설정
 
         phone_l = new JLabel("전화번호");
-        phone1_tf = new JTextField(3);
-        phone2_tf = new JTextField(3);
-        phone3_tf = new JTextField(3);
-        dash_l = new JLabel("-");
+        phone1_tf = new JTextField(3); //전화번호 첫번째 세자리 필드 ex)010
+        phone2_tf = new JTextField(4); //전화번호 두번째 세자리 필드 ex)1234
+        phone3_tf = new JTextField(4); //전화번호 세번째 세자리 필드 ex)5678
+        dash_l = new JLabel("-"); // 각 전화번호 필드를 이어줄 "-" 생성
         dash_2 = new JLabel("-");
 
-        gbc2.gridx = 0;
+        gbc2.gridx = 0; //0열에 컴포넌트 배치
         phone_p.add(phone1_tf, gbc2);
-        gbc2.gridx = 1;
+        gbc2.gridx = 1; //1열에 컴포넌트 배치
         phone_p.add(dash_l, gbc2);
-        gbc2.gridx = 2;
+        gbc2.gridx = 2; //2열에 컴포넌트 배치
         phone_p.add(phone2_tf, gbc2);
-        gbc2.gridx = 3;
+        gbc2.gridx = 3; //3열에 컴포넌트 배치
         phone_p.add(dash_2, gbc2);
-        gbc2.gridx = 4;
+        gbc2.gridx = 4; //4열에 컴포넌트 배치
         phone_p.add(phone3_tf, gbc2);
 
-        phone_p = new JPanel(new GridBagLayout());
-        gbc.gridx = 0;
-        phone_p.add(phone1_tf, gbc);
-        gbc.gridx = 1;
-        phone_p.add(dash_l, gbc);
-        gbc.gridx = 2;
-        phone_p.add(phone2_tf, gbc);
-        gbc.gridx = 3;
-        phone_p.add(dash_2, gbc);
-        gbc.gridx = 4;
-        phone_p.add(phone3_tf, gbc);
+//        phone_p = new JPanel(new GridBagLayout());
+        gbc.gridx = 0; phone_p.add(phone1_tf, gbc);
+        gbc.gridx = 1; phone_p.add(dash_l, gbc);
+        gbc.gridx = 2; phone_p.add(phone2_tf, gbc);
+        gbc.gridx = 3; phone_p.add(dash_2, gbc);
+        gbc.gridx = 4; phone_p.add(phone3_tf, gbc);
 
         center_p.add(phone_l);
         center_p.add(phone_p);
