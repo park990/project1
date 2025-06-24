@@ -7,7 +7,6 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 import javax.swing.*;
-import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,7 +14,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.Random;
 
-public class SignUP_new extends JFrame {
+public class SignUP extends JFrame {
 
     //패널
     JPanel center_p, bottom_p, phone_p, birth_p, gender_p, bkCode_p;
@@ -39,11 +38,11 @@ public class SignUP_new extends JFrame {
 
     SqlSessionFactory factory;
 
-    public SignUP_new() {
+    public SignUP() {
 
         // 프레임 설정
         this.setTitle("회원가입");
-
+        Cursor hand=new Cursor(Cursor.HAND_CURSOR);
 
         // 중앙 패널 (8행 3열)
         center_p = new JPanel(new GridLayout(12, 3, 10, 10));
@@ -81,6 +80,10 @@ public class SignUP_new extends JFrame {
         month_cmb = new JComboBox<>(); //[월] 콤보박스
         day_cmb = new JComboBox<>(); //[일] 콤보박스
 
+        year_cmb.setCursor(hand);
+        month_cmb.setCursor(hand);
+        day_cmb.setCursor(hand);
+
         for (int i = 1965; i <= 2025; i++) year_cmb.addItem(i + "년"); //1965~2025년생 선택 가능
 
         for (int m = 1; m <= 12; m++) {
@@ -115,7 +118,7 @@ public class SignUP_new extends JFrame {
 
         birth_p = new JPanel(new GridBagLayout()); //패널을 그리드백 레이아웃 설정
         GridBagConstraints gbc = new GridBagConstraints(); //각 컴포넌트 위치 및 여백을 설정하는 객체
-        gbc.insets = new Insets(0, 2, 0, 2); //컴포넌트 주변 여백 설정
+        gbc.insets = new Insets(0, 2, 1, 2); //컴포넌트 주변 여백 설정
         gbc.gridx = 0; //0열에 컴포넌트 배치
         birth_p.add(year_cmb, gbc); //[년도]콤보박스 -> 0번째 열에 추가
         gbc.gridx = 1; //1열에 컴포넌트 배치
@@ -134,6 +137,9 @@ public class SignUP_new extends JFrame {
         male_rbt.setSelected(true); //기본값: [남성] 선택
         gender_group.add(female_rbt = new JRadioButton("여성")); //[여성] 라디오버튼을 버튼그룹에 추가
 
+        male_rbt.setCursor(hand);
+        female_rbt.setCursor(hand);
+
         gender_p = new JPanel(new FlowLayout(FlowLayout.LEFT));
         center_p.add(gender_l);
         gender_p.add(male_rbt);
@@ -148,13 +154,13 @@ public class SignUP_new extends JFrame {
 
         phone_l = new JLabel("전화번호");
 
-        phone1_tf = new JTextField(3);
+        phone1_tf = new JTextField(4);
         phone1_tf.setDocument(new textFieldLimit(4));
 
-        phone2_tf = new JTextField(3);
+        phone2_tf = new JTextField(4);
         phone2_tf.setDocument(new textFieldLimit(4));
 
-        phone3_tf = new JTextField(3);
+        phone3_tf = new JTextField(4);
         phone3_tf.setDocument(new textFieldLimit(4));
         dash_l = new JLabel("-");
         dash_2 = new JLabel("-");
@@ -205,15 +211,16 @@ public class SignUP_new extends JFrame {
         // 11. 강사용 체크 박스
         adminUser_l = new JLabel(" ");
         adminUser_box = new JCheckBox("강사용 계정");
+        adminUser_box.setCursor(hand);
         center_p.add(adminUser_l);
         center_p.add(adminUser_box);
 
         // 버튼 영역
         bottom_p = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 10));
         join_bt = new JButton("가입하기");
-        join_bt.setCursor(new Cursor(Cursor.HAND_CURSOR));// 가입하기 버튼에 손 모양
+        join_bt.setCursor(hand);// 가입하기 버튼에 손 모양
         cancel_bt = new JButton("취소하기");
-        cancel_bt.setCursor(new Cursor(Cursor.HAND_CURSOR));// 취소하기 버튼에 손 모양
+        cancel_bt.setCursor(hand);// 취소하기 버튼에 손 모양
 
         bottom_p.add(join_bt);
         bottom_p.add(cancel_bt);
@@ -283,7 +290,7 @@ public class SignUP_new extends JFrame {
                     if (idCheck > 0) {
                         id_tf.setForeground(Color.RED);
                         id_tf.setFont(new Font("맑은 고딕", Font.BOLD, 13));
-                        JOptionPane.showMessageDialog(SignUP_new.this,
+                        JOptionPane.showMessageDialog(SignUP.this,
                                 "이미 존재하는 아이디입니다. 다른 아이디를 입력해주세요.");
                         id_tf.setText(""); //텍스트 초기화
                         id_tf.setForeground(Color.BLACK);
@@ -300,9 +307,9 @@ public class SignUP_new extends JFrame {
                             svo.setStd_phone(mem_phone);
                             svo.setStd_address(mem_address);
                             svo.setStd_email(mem_email);
+
                             ss.insert("student.insertStd", svo);
-                            String str = svo.getStdno();
-                            mvo.setStdno(str);
+                            mvo.setStdno(svo.getStdno());
                         } else { //강사일경우 수행한다.
                             AdminVO avo = new AdminVO();
                             avo.setAd_name(mem_name);
@@ -311,26 +318,25 @@ public class SignUP_new extends JFrame {
                             avo.setAd_email(mem_email);
 
                             ss.insert("admin.insertAdmin", avo);
-                            String str2 = avo.getAdno();
-                            mvo.setAdno(str2);
+                            mvo.setAdno(avo.getAdno());
                         }
 
                     }
 
                     int res = ss.insert("member.insertMember", mvo);
-                    if (res > 0) {
-                        JOptionPane.showMessageDialog(SignUP_new.this,
+                    if (res >0) {
+                        JOptionPane.showMessageDialog(SignUP.this,
                                 "회원가입 성공!");
                         ss.commit();
                         close(); //창 종료
                     } else {
-                        JOptionPane.showMessageDialog(SignUP_new.this,
+                        JOptionPane.showMessageDialog(SignUP.this,
                                 "회원가입 실패!");
                         ss.rollback();
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();
-                    JOptionPane.showMessageDialog(SignUP_new.this,
+                    JOptionPane.showMessageDialog(SignUP.this,
                             "에러 발생: " + ex.getMessage());
                 }
             }
@@ -382,7 +388,7 @@ public class SignUP_new extends JFrame {
     }
 
     public static void main(String[] args) {
-        new SignUP_new();
+        new SignUP();
     }
 }
 
