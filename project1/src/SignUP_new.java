@@ -47,7 +47,6 @@ public class SignUP_new extends JFrame {
 
         // 중앙 패널 (8행 3열)
         center_p = new JPanel(new GridLayout(12, 3, 10, 10));
-        center_p.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         // 바텀 패널
         center_p.setBorder(BorderFactory.createEmptyBorder(
@@ -81,10 +80,6 @@ public class SignUP_new extends JFrame {
         year_cmb = new JComboBox<>(); //[년도] 콤보박스
         month_cmb = new JComboBox<>(); //[월] 콤보박스
         day_cmb = new JComboBox<>(); //[일] 콤보박스
-        Dimension cmbSize = new Dimension(100, 30); //콤보박스 창 크기
-        year_cmb.setPreferredSize(cmbSize); //사이즈 설정
-        month_cmb.setPreferredSize(cmbSize);
-        day_cmb.setPreferredSize(cmbSize);
 
         for (int i = 1965; i <= 2025; i++) year_cmb.addItem(i + "년"); //1965~2025년생 선택 가능
 
@@ -140,9 +135,9 @@ public class SignUP_new extends JFrame {
         gender_group.add(female_rbt = new JRadioButton("여성")); //[여성] 라디오버튼을 버튼그룹에 추가
 
         gender_p = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        center_p.add(gender_l);
         gender_p.add(male_rbt);
         gender_p.add(female_rbt);
-        center_p.add(gender_l);
         center_p.add(gender_p);
         center_p.add(new JLabel()); //6행,3열 공백
 
@@ -163,7 +158,7 @@ public class SignUP_new extends JFrame {
         phone3_tf.setDocument(new textFieldLimit(4));
         dash_l = new JLabel("-");
         dash_2 = new JLabel("-");
-        
+
         gbc.gridx = 0;
         phone_p.add(phone1_tf, gbc);
         gbc.gridx = 1;
