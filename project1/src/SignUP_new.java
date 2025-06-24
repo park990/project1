@@ -405,33 +405,6 @@ public class SignUP_new extends JFrame {
         return sb.toString();
     }
 
-    // [년도] 콤보박스용
-    private String[] getYears() {
-        String[] years = new String[100];
-        for (int i = 0; i < 100; i++) {
-            years[i] = String.valueOf(2026 - i);
-        }
-        return years;
-    }
-
-    // [월] 콤보박스용
-    private String[] getMonths() {
-        String[] months = new String[12];
-        for (int i = 0; i < 12; i++) {
-            months[i] = String.valueOf(i + 1);
-        }
-        return months;
-    }
-
-    // [일] 콤보박스용
-    private String[] getDays() {
-        String[] days = new String[31];
-        for (int i = 0; i < 31; i++) {
-            days[i] = String.valueOf(i + 1);
-        }
-        return days;
-    }
-
     public static void main(String[] args) {
         new SignUP_new();
     }
