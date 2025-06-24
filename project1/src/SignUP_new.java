@@ -21,7 +21,7 @@ public class SignUP_new extends JFrame {
     JPanel center_p, bottom_p, phone_p, birth_p, gender_p, bkCode_p;
     //라벨
     JLabel id_l, pw_l, pwInfo_l, pwConfirm_l, name_l, birth_l, gender_l, phone_l, dash_l, dash_2,
-    bkCode_l, bkCodeInfo_l, adminUser_l, email_l, address_l;
+            bkCode_l, bkCodeInfo_l, adminUser_l, email_l, address_l;
     //텍스트필드
     JTextField id_tf, name_tf, birth_tf, phone1_tf, phone2_tf, phone3_tf, bkCode_tf, email_tf, address_tf;
     //패스워드필드
@@ -88,8 +88,36 @@ public class SignUP_new extends JFrame {
         day_cmb.setPreferredSize(cmbSize);
 
         for (int i = 1965; i <= 2025; i++) year_cmb.addItem(i + "년"); //1965~2025년생 선택 가능
-        for (int i = 1; i <= 12; i++) month_cmb.addItem(i + "월"); //1~12월
-        for (int i = 1; i <= 31; i++) day_cmb.addItem(i + "일"); //1~31일
+
+        for (int m = 1; m <= 12; m++) {
+            month_cmb.addItem(m + "월");
+        }
+        for (int d = 1; d <= 31; d++) day_cmb.addItem(d + "일"); //1~31일
+
+        month_cmb.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int m = month_cmb.getSelectedIndex() + 1;
+
+                day_cmb.removeAllItems();//클릭할때마다 데이 리셋
+
+                if (m == 1|| m == 3|| m == 5|| m == 7|| m == 10|| m == 12 || m == 8) {
+                    for (int d = 1; d <= 31; d++) {
+                        day_cmb.addItem(d + "일");
+                    }
+                } else if (m == 2) {
+                    for (int d = 1; d <= 28; d++) {
+                        day_cmb.addItem(d + "일");
+                    }
+                } else {
+                    for (int d = 1; d <= 30; d++) {
+                        day_cmb.addItem(d + "일");
+                    }
+
+
+                }
+            }
+        });
 
         birth_p = new JPanel(new GridBagLayout()); //패널을 그리드백 레이아웃 설정
         GridBagConstraints gbc = new GridBagConstraints(); //각 컴포넌트 위치 및 여백을 설정하는 객체
@@ -101,16 +129,16 @@ public class SignUP_new extends JFrame {
         gbc.gridx = 2; //2열에 컴포넌트 배치
         birth_p.add(day_cmb, gbc); //[년도]콤보박스 -> 2번째 열에 추가
 
-        center_p.add(birth_l = new JLabel("생년월일"));
+        center_p.add(birth_l);
         center_p.add(birth_p);
         center_p.add(new JLabel()); //5행,3열 공백
 
         // 6. 성별
         gender_l = new JLabel("성별");
         gender_group = new ButtonGroup(); //버튼 그룹 생성
-        gender_group.add(male_rbt=new JRadioButton("남성")); //[남성] 라디오버튼을 버튼그룹에 추가
+        gender_group.add(male_rbt = new JRadioButton("남성")); //[남성] 라디오버튼을 버튼그룹에 추가
         male_rbt.setSelected(true); //기본값: [남성] 선택
-        gender_group.add(female_rbt=new JRadioButton("여성")); //[여성] 라디오버튼을 버튼그룹에 추가
+        gender_group.add(female_rbt = new JRadioButton("여성")); //[여성] 라디오버튼을 버튼그룹에 추가
 
         gender_p = new JPanel(new FlowLayout(FlowLayout.LEFT));
         gender_p.add(male_rbt);
@@ -155,11 +183,16 @@ public class SignUP_new extends JFrame {
         phone_p.add(phone3_tf, gbc2);
 
 //        phone_p = new JPanel(new GridBagLayout());
-        gbc.gridx = 0; phone_p.add(phone1_tf, gbc);
-        gbc.gridx = 1; phone_p.add(dash_l, gbc);
-        gbc.gridx = 2; phone_p.add(phone2_tf, gbc);
-        gbc.gridx = 3; phone_p.add(dash_2, gbc);
-        gbc.gridx = 4; phone_p.add(phone3_tf, gbc);
+        gbc.gridx = 0;
+        phone_p.add(phone1_tf, gbc);
+        gbc.gridx = 1;
+        phone_p.add(dash_l, gbc);
+        gbc.gridx = 2;
+        phone_p.add(phone2_tf, gbc);
+        gbc.gridx = 3;
+        phone_p.add(dash_2, gbc);
+        gbc.gridx = 4;
+        phone_p.add(phone3_tf, gbc);
 
         center_p.add(phone_l);
         center_p.add(phone_p);
@@ -215,7 +248,6 @@ public class SignUP_new extends JFrame {
 
         this.setBounds(350, 450, 650, 550);
         this.setVisible(true);
-
 
 
         //이벤트 감지자
@@ -354,16 +386,16 @@ public class SignUP_new extends JFrame {
         Random random = new Random();
         int length = random.nextInt(5) + 5;
         StringBuffer sb = new StringBuffer();
-        for(int i = 0; i < length; i++) {
+        for (int i = 0; i < length; i++) {
             int choice = random.nextInt(3);
             switch (choice) {
                 case 0:
-                    sb.append((char)((int)random.nextInt(25)+97));
+                    sb.append((char) ((int) random.nextInt(25) + 97));
                     break;
                 case 1:
-                    sb.append((char)((int)random.nextInt(25)+65));
+                    sb.append((char) ((int) random.nextInt(25) + 65));
                 case 2:
-                    sb.append((char)((int)random.nextInt(10)+48));
+                    sb.append((char) ((int) random.nextInt(10) + 48));
                     break;
                 default:
                     break;
@@ -381,6 +413,7 @@ public class SignUP_new extends JFrame {
         }
         return years;
     }
+
     // [월] 콤보박스용
     private String[] getMonths() {
         String[] months = new String[12];
@@ -389,6 +422,7 @@ public class SignUP_new extends JFrame {
         }
         return months;
     }
+
     // [일] 콤보박스용
     private String[] getDays() {
         String[] days = new String[31];
