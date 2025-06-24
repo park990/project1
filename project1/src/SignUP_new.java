@@ -10,6 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.io.Reader;
 import java.util.Random;
 
@@ -34,7 +35,9 @@ public class SignUP_new extends JFrame {
     ButtonGroup gender_group;
     //체크 박스
     JCheckBox adminUser_box;
-
+    StudentVO svo;
+    AdminVO avo;
+    SqlSessionFactory factory;
     public SignUP_new() {
 
         //UI세팅
@@ -277,10 +280,8 @@ public class SignUP_new extends JFrame {
                     mvo.setMem_address(mem_address);//멤버 address 추가
 
                     //Mybatis 설정
-                    Reader r = Resources.getResourceAsReader("pm/config/conf.xml");
-                    System.out.println(Resources.getResourceAsStream("pm/mapper/member.xml"));
-                    SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(r);
-                    r.close();
+
+                    factory_open();
 
                     SqlSession ss = factory.openSession();
 
@@ -300,24 +301,23 @@ public class SignUP_new extends JFrame {
                         // std_t 테이블에 값 설정
                         // admin_t 테이블에 값 설정
                         if(mem_role.equals("S")) { //회원이 학생일경우 수행한다.
-                            StudentVO svo = new StudentVO();
+                            svo = new StudentVO();
                             svo.setStd_name(mem_name);
                             svo.setStd_phone(mem_phone);
                             svo.setStd_address(mem_address);
                             svo.setStd_email(mem_email);
                             ss.insert("student.insertStd", svo);
                             String str = svo.getStdno();
-                            System.out.println(str);
                             mvo.setStdno(str);
                         } else { //강사일경우 수행한다.
-                            AdminVO avo = new AdminVO();
+                            avo = new AdminVO();
                             avo.setAd_name(mem_name);
                             avo.setAd_phone(mem_phone);
                             avo.setAd_address(mem_address);
                             avo.setAd_email(mem_email);
+
                             ss.insert("admin.insertAdmin", avo);
                             String str2 = avo.getAdno();
-                            System.out.println(str2);
                             mvo.setAdno(str2);
                         }
 
@@ -349,6 +349,12 @@ public class SignUP_new extends JFrame {
                 close();
             }
         });
+    } // 생t성자 마지막
+    private void factory_open() throws IOException {
+        Reader r = Resources.getResourceAsReader("pm/config/conf.xml");
+
+        factory = new SqlSessionFactoryBuilder().build(r);
+        r.close();
     }
 
     //종료

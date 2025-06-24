@@ -22,7 +22,7 @@
     </select>
 
     <select id="find_st_PW" resultType="pm.vo.MemberVO" parameterType="Map">
-        select mem_pw from member_t where backupcode=#{bc} and mem_id=#{ID} and adno is null;
+        select mem_pw from member_t where backupCode=#{bc} and mem_id=#{ID} and adno is null;
     </select>
 
 
