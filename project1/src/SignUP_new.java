@@ -43,8 +43,7 @@ public class SignUP_new extends JFrame {
 
         // 프레임 설정
         this.setTitle("회원가입");
-        this.setLayout(new BorderLayout());
-        this.setBounds(700, 200, 500, 450);
+
 
         // 중앙 패널 (8행 3열)
         center_p = new JPanel(new GridLayout(12, 3, 10, 10));
@@ -154,11 +153,6 @@ public class SignUP_new extends JFrame {
 
         phone_l = new JLabel("전화번호");
 
-        phone1_tf = new JTextField(3); //전화번호 첫번째 세자리 필드 ex)010
-        phone2_tf = new JTextField(4); //전화번호 두번째 세자리 필드 ex)1234
-        phone3_tf = new JTextField(4); //전화번호 세번째 세자리 필드 ex)5678
-        dash_l = new JLabel("-"); // 각 전화번호 필드를 이어줄 "-" 생성
-
         phone1_tf = new JTextField(3);
         phone1_tf.setDocument(new textFieldLimit(4));
 
@@ -168,21 +162,8 @@ public class SignUP_new extends JFrame {
         phone3_tf = new JTextField(3);
         phone3_tf.setDocument(new textFieldLimit(4));
         dash_l = new JLabel("-");
-
         dash_2 = new JLabel("-");
-
-        gbc2.gridx = 0; //0열에 컴포넌트 배치
-        phone_p.add(phone1_tf, gbc2);
-        gbc2.gridx = 1; //1열에 컴포넌트 배치
-        phone_p.add(dash_l, gbc2);
-        gbc2.gridx = 2; //2열에 컴포넌트 배치
-        phone_p.add(phone2_tf, gbc2);
-        gbc2.gridx = 3; //3열에 컴포넌트 배치
-        phone_p.add(dash_2, gbc2);
-        gbc2.gridx = 4; //4열에 컴포넌트 배치
-        phone_p.add(phone3_tf, gbc2);
-
-//        phone_p = new JPanel(new GridBagLayout());
+        
         gbc.gridx = 0;
         phone_p.add(phone1_tf, gbc);
         gbc.gridx = 1;
@@ -246,7 +227,7 @@ public class SignUP_new extends JFrame {
         this.add(center_p, BorderLayout.CENTER);
         this.add(bottom_p, BorderLayout.SOUTH);
 
-        this.setBounds(350, 450, 650, 550);
+        this.setBounds(750, 250, 650, 550);
         this.setVisible(true);
 
 
