@@ -7,6 +7,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 import javax.swing.*;
+import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -143,8 +144,13 @@ public class SignUP_new extends JFrame {
 
         phone_l = new JLabel("전화번호");
         phone1_tf = new JTextField(3);
+        phone1_tf.setDocument(new textFieldLimit(4));
+
         phone2_tf = new JTextField(3);
+        phone2_tf.setDocument(new textFieldLimit(4));
+
         phone3_tf = new JTextField(3);
+        phone3_tf.setDocument(new textFieldLimit(4));
         dash_l = new JLabel("-");
         dash_2 = new JLabel("-");
 
@@ -178,6 +184,7 @@ public class SignUP_new extends JFrame {
         // 8. 백업코드
         bkCode_l = new JLabel("백업코드");
         bkCode_tf = new JTextField();
+        bkCode_tf.setEditable(false);
         bkCodeInfo_l = new JLabel("※ 아이디/패스워드를 찾을때 사용됩니다.");
         bkCodeInfo_l.setFont(new Font("맑은 고딕", Font.ITALIC, 10));
         bkCodeInfo_l.setForeground(Color.GRAY); //폰트색상 회색
