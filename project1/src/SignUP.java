@@ -7,7 +7,6 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 import javax.swing.*;
-import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,7 +16,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.Random;
 
-public class SignUP_new extends JFrame {
+public class SignUP extends JFrame {
 
     //패널
     JPanel center_p, bottom_p, phone_p, birth_p, gender_p, bkCode_p;
@@ -41,10 +40,11 @@ public class SignUP_new extends JFrame {
 
     SqlSessionFactory factory;
 
-    public SignUP_new() {
+    public SignUP() {
 
         // 프레임 설정
         this.setTitle("회원가입");
+        Cursor hand=new Cursor(Cursor.HAND_CURSOR);
 
 
         // 중앙 패널 (8행 3열)
@@ -86,6 +86,11 @@ public class SignUP_new extends JFrame {
         month_cmb = new JComboBox<>(); //[월] 콤보박스
         day_cmb = new JComboBox<>(); //[일] 콤보박스
 
+        year_cmb.setCursor(hand);
+        month_cmb.setCursor(hand);
+        day_cmb.setCursor(hand);
+
+
         for (int i = 1965; i <= 2025; i++) year_cmb.addItem(i + "년"); //1965~2025년생 선택 가능
 
         for (int m = 1; m <= 12; m++) {
@@ -120,7 +125,7 @@ public class SignUP_new extends JFrame {
 
         birth_p = new JPanel(new GridBagLayout()); //패널을 그리드백 레이아웃 설정
         GridBagConstraints gbc = new GridBagConstraints(); //각 컴포넌트 위치 및 여백을 설정하는 객체
-        gbc.insets = new Insets(0, 2, 0, 2); //컴포넌트 주변 여백 설정
+        gbc.insets = new Insets(0, 2, 1, 2); //컴포넌트 주변 여백 설정
         gbc.gridx = 0; //0열에 컴포넌트 배치
         birth_p.add(year_cmb, gbc); //[년도]콤보박스 -> 0번째 열에 추가
         gbc.gridx = 1; //1열에 컴포넌트 배치
@@ -139,6 +144,10 @@ public class SignUP_new extends JFrame {
         male_rbt.setSelected(true); //기본값: [남성] 선택
         gender_group.add(female_rbt = new JRadioButton("여성")); //[여성] 라디오버튼을 버튼그룹에 추가
 
+        male_rbt.setCursor(hand);
+        female_rbt.setCursor(hand);
+
+
         gender_p = new JPanel(new FlowLayout(FlowLayout.LEFT));
         center_p.add(gender_l);
         gender_p.add(male_rbt);
@@ -153,13 +162,15 @@ public class SignUP_new extends JFrame {
 
         phone_l = new JLabel("전화번호");
 
-        phone1_tf = new JTextField(3);
+
+        phone1_tf = new JTextField(4);
+
         phone1_tf.setDocument(new textFieldLimit(4));
 
-        phone2_tf = new JTextField(3);
+        phone2_tf = new JTextField(4);
         phone2_tf.setDocument(new textFieldLimit(4));
 
-        phone3_tf = new JTextField(3);
+        phone3_tf = new JTextField(4);
         phone3_tf.setDocument(new textFieldLimit(4));
         dash_l = new JLabel("-");
         dash_2 = new JLabel("-");
@@ -210,15 +221,16 @@ public class SignUP_new extends JFrame {
         // 11. 강사용 체크 박스
         adminUser_l = new JLabel(" ");
         adminUser_box = new JCheckBox("강사용 계정");
+        adminUser_box.setCursor(hand);
         center_p.add(adminUser_l);
         center_p.add(adminUser_box);
 
         // 버튼 영역
         bottom_p = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 10));
         join_bt = new JButton("가입하기");
-        join_bt.setCursor(new Cursor(Cursor.HAND_CURSOR));// 가입하기 버튼에 손 모양
+        join_bt.setCursor(hand);// 가입하기 버튼에 손 모양
         cancel_bt = new JButton("취소하기");
-        cancel_bt.setCursor(new Cursor(Cursor.HAND_CURSOR));// 취소하기 버튼에 손 모양
+        cancel_bt.setCursor(hand);// 취소하기 버튼에 손 모양
 
         bottom_p.add(join_bt);
         bottom_p.add(cancel_bt);
@@ -229,7 +241,8 @@ public class SignUP_new extends JFrame {
 
         this.setBounds(750, 250, 650, 550);
         this.setVisible(true);
-        //프로그램 종료
+
+        //프로그램 종료===============================================================================================================================
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -237,13 +250,12 @@ public class SignUP_new extends JFrame {
             }
         });
 
+
         //이벤트 감지자
         //가입버튼 눌렀을때 수행
         join_bt.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //아이디 유효성 검사
-//                String input = id_tf.getText().trim();
 
                 //1. 입력값 수집
                 String mem_id = id_tf.getText().trim();
@@ -280,130 +292,93 @@ public class SignUP_new extends JFrame {
                 if (mem_id.isEmpty() || mem_pw.isEmpty() || mem_pw2.isEmpty() || mem_name.isEmpty()
                         || phone1.isEmpty() || phone2.isEmpty() || phone3.isEmpty()
                         || year == null || month == null || day == null) {
-                    JOptionPane.showMessageDialog(SignUP_new.this,
+                    JOptionPane.showMessageDialog(SignUP.this,
                             "모든 필수 항목을 입력해주세요.");
                     return;
                 }
 
                 if (!mem_pw.equals(mem_pw2)) {
-                    JOptionPane.showMessageDialog(SignUP_new.this,
+                    JOptionPane.showMessageDialog(SignUP.this,
                             "비밀번호가 일치하지 않습니다.");
                     return;
                 }
 
                 if(!mem_id.matches("^[a-zA-Z0-9]+$")) {
-                    JOptionPane.showMessageDialog(SignUP_new.this,
+                    JOptionPane.showMessageDialog(SignUP.this,
                             "아이디는 영문자와 숫자만 입력 가능합니다.");
                     return;
                 }
 
-                //유효성 검사
-//                if(id_tf.getText().length() < 1 || pw_f.getText().length() < 1 ||
-//                        name_tf.getText().length() < 1 || phone1_tf.getText().length() < 1 ||
-//                        phone2_tf.getText().length() < 1 || phone3_tf.getText().length() < 1) {
-//                } else {
-//                    if (input.equals("")) { //공백일경우
-//                        JOptionPane.showMessageDialog(null,
-//                                "사용할 아이디를 입력해주세요");
-//                        return;
-//                    } else if (!input.matches("^[a-zA-Z0-9]+$")) { //영어와 숫자가 아닐때
-//                        JOptionPane.showMessageDialog(null,
-//                                "아이디는 영문자와 숫자만을 포함합니다.\r\n다시 입력해주세요.");
-//                        return;
-//                    }
-
-                    try {
-                        //3. Mybatis 설정
-                        factory_open();
-                        SqlSession ss = factory.openSession();
-                        //아이디 중복 체크
-                        int idCheck = ss.selectOne("member.checkId", mem_id);
-                        if (idCheck > 0) {
-                            id_tf.setForeground(Color.RED);
-                            id_tf.setFont(new Font("맑은 고딕", Font.BOLD, 13));
-                            id_tf.setForeground(Color.BLACK);
-                            JOptionPane.showMessageDialog(SignUP_new.this,
-                                    "이미 존재하는 아이디입니다. 다른 아이디를 입력해주세요.");
-                            id_tf.setText(""); //텍스트 초기화
-                            return;
-                        }
-
-//                        //사용자 입력 값 가져오기
-//                        mem_id = new String(id_tf.getText());
-//                        mem_pw = new String(pw_f.getPassword());
-//                        System.out.println("패스워드: " + mem_pw); //패스워드 확인
-//                        mem_name = new String(name_tf.getText());
-//                        year = year_cmb.getSelectedItem().toString().replace("년", "");
-//                        month = month_cmb.getSelectedItem().toString().replace("월", "");
-//                        day = day_cmb.getSelectedItem().toString().replace("일", "");
-//                        mem_birth = year + "-" + String.format("%02d", Integer.parseInt(month))
-//                                + "-" + String.format("%02d", Integer.parseInt(day));
-//                        mem_phone = new String(phone1_tf.getText() + phone2_tf.getText()
-//                                + phone3_tf.getText());
-//                        mem_gender = male_rbt.isSelected() ? "M" : "F"; //"M" : 남성, "F" : 여성
-//                        mem_role = adminUser_box.isSelected() ? "A" : "S"; //강사용, 학생
-//                        mem_email = email_tf.getText().trim(); //멤버 email 가져오기
-//                        mem_address = address_tf.getText().trim(); //멤버 address 가져오기
-
-                        //vo객체 생성 및 값 설정
-                        MemberVO mvo = new MemberVO();
-                        mvo.setMem_id(mem_id); //아이디
-                        mvo.setMem_pw(mem_pw); //패스워드
-                        mvo.setMem_name(mem_name); //이름
-                        mvo.setMem_quit("N"); //탈퇴여부, "N" : 탈퇴x
-                        mvo.setMem_gender(mem_gender); //성별, "M" : 남성, Default : "M"
-                        mvo.setMem_birth(mem_birth); //생년월일
-                        mvo.setMem_phone(mem_phone); //전화번호
-                        mvo.setMem_bkCode(mem_bkCode); //백업코드
-                        mvo.setMem_role(mem_role); //사용자 유형, 강사인지? 학생인지?
-                        mvo.setMem_email(mem_email);//멤버 email 추가
-                        mvo.setMem_address(mem_address);//멤버 address 추가
-
-//                        if (adminUser_box.isSelected()) {
-//                            //mem_t 테이블에서 정보를 가져와서
-//                            // std_t 테이블에 값 설정
-//                            // admin_t 테이블에 값 설정
-                            if (mem_role.equals("S")) { //회원이 학생일경우 수행한다.
-                                StudentVO svo = new StudentVO();
-                                svo.setStd_name(mem_name);
-                                svo.setStd_phone(mem_phone);
-                                svo.setStd_address(mem_address);
-                                svo.setStd_email(mem_email);
-                                ss.insert("student.insertStd", svo);
-//                                String str = svo.getStdno();
-//                                mvo.setStdno(str);
-                                mvo.setStdno(svo.getStdno());
-                            } else { //강사일경우 수행한다.
-                                AdminVO avo = new AdminVO();
-                                avo.setAd_name(mem_name);
-                                avo.setAd_phone(mem_phone);
-                                avo.setAd_address(mem_address);
-                                avo.setAd_email(mem_email);
-                                ss.insert("admin.insertAdmin", avo);
-//                                String str2 = avo.getAdno();
-//                                mvo.setAdno(str2);
-                                mvo.setAdno(avo.getAdno());
-                            }
-
-                        //6. 최종 insert
-                        int res = ss.insert("member.insertMember", mvo);
-                        if (res > 0) {
-                            JOptionPane.showMessageDialog(SignUP_new.this,
-                                    "회원가입 성공!");
-                            ss.commit();
-                            close(); //창 종료
-                        } else {
-                            JOptionPane.showMessageDialog(SignUP_new.this,
-                                    "회원가입 실패!");
-                            ss.rollback();
-                        }
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                        JOptionPane.showMessageDialog(SignUP_new.this,
-                                "에러 발생: " + ex.getMessage());
+                try {
+                    //3. Mybatis 설정
+                    factory_open();
+                    SqlSession ss = factory.openSession();
+                    //아이디 중복 체크
+                    int idCheck = ss.selectOne("member.checkId", mem_id);
+                    if (idCheck > 0) {
+                        id_tf.setForeground(Color.RED);
+                        id_tf.setFont(new Font("맑은 고딕", Font.BOLD, 13));
+                        id_tf.setForeground(Color.BLACK);
+                        JOptionPane.showMessageDialog(SignUP.this,
+                                "이미 존재하는 아이디입니다. 다른 아이디를 입력해주세요.");
+                        id_tf.setText(""); //텍스트 초기화
+                        return;
                     }
+
+                    MemberVO mvo = new MemberVO(); //멤버vo 객체 생성
+                    if (!adminUser_box.isSelected()) { //회원이 학생일경우 수행한다.
+                        StudentVO svo = new StudentVO();
+                        svo.setStd_name(mem_name);
+                        svo.setStd_phone(mem_phone);
+                        svo.setStd_address(mem_address);
+                        svo.setStd_email(mem_email);
+                        ss.insert("student.insertStd", svo); //학번
+                        mvo.setStdno(svo.getStdno());
+                    } else { //강사일경우 수행한다.
+                        AdminVO avo = new AdminVO();
+                        avo.setAd_name(mem_name);
+                        avo.setAd_phone(mem_phone);
+                        avo.setAd_address(mem_address);
+                        avo.setAd_email(mem_email);
+                        ss.insert("admin.insertAdmin", avo); //강사번호
+                        mvo.setAdno(avo.getAdno());
+                    }
+
+                    //vo객체 생성 및 값 설정
+                    mvo.setMem_id(mem_id); //아이디
+                    mvo.setMem_pw(mem_pw); //패스워드
+                    mvo.setMem_name(mem_name); //이름
+                    mvo.setMem_quit("N"); //탈퇴여부, "N" : 탈퇴x
+                    mvo.setMem_gender(mem_gender); //성별, "M" : 남성, Default : "M"
+                    mvo.setMem_birth(mem_birth); //생년월일
+                    mvo.setMem_phone(mem_phone); //전화번호
+                    mvo.setMem_bkCode(mem_bkCode); //백업코드
+                    mvo.setMem_role(mem_role); //사용자 유형, 강사인지? 학생인지?
+                    mvo.setMem_email(mem_email);//멤버 email 추가
+                    mvo.setMem_address(mem_address);//멤버 address 추가
+
+
+                    //6. 최종 insert
+                    int res = ss.insert("member.insertMember", mvo);
+                    if (res > 0) {
+                        JOptionPane.showMessageDialog(SignUP.this,
+                                "회원가입 성공!");
+                        ss.commit();
+                        close(); //창 종료
+                    } else {
+                        JOptionPane.showMessageDialog(SignUP.this,
+                                "회원가입 실패!");
+                        ss.rollback();
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(SignUP.this,
+                            "에러 발생: " + ex.getMessage());
                 }
+
+            }
         });
+
         //취소버튼 눌렀을때 수행
         cancel_bt.addActionListener(new ActionListener() {
             @Override
@@ -449,7 +424,9 @@ public class SignUP_new extends JFrame {
     }
 
     public static void main(String[] args) {
-        new SignUP_new();
+        new SignUP();
     }
 }
+
+
 

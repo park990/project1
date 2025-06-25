@@ -31,7 +31,7 @@ public class LoginFrame extends JFrame {
 
 
     public LoginFrame() throws IOException {
-
+        Cursor hand = new Cursor(Cursor.HAND_CURSOR);
         this.setTitle("로그인  ");
 
         init();
@@ -98,13 +98,13 @@ public class LoginFrame extends JFrame {
 
         // 로그인버튼
         b1 = new JButton("로그인");
-        b1.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        b1.setCursor(hand);
 
         Cgp1_1 = new JPanel(new FlowLayout(FlowLayout.RIGHT, 1, 0));// 강사와 로그인 사이의 간격을 띄움
 
         // 강사 체크박스와 버튼 패널에 삽입
         Cgp1_1.add(teacher_ckbox = new JCheckBox("강사"));
-        teacher_ckbox.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        teacher_ckbox.setCursor(hand);
         Cgp1_1.add(b1);
 
         // 강사 로그인들어간 패널과 전체화면과의 간격 설정
