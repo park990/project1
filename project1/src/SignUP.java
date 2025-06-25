@@ -332,7 +332,10 @@ public class SignUP extends JFrame {
                     if (managerCode.equals("admin")) {
                         mem_admin_inputOrNot = "1"; //관리자 코드가 맞다면 1을 컬럼값에 저장
                                                     //1은 관리자임
-                    } else if (managerCode.length()<1) {
+                    }else if(managerCode == null){//아무것도 입력 안했을때 managerCode.equals("") 일 수도 있음
+
+                    }
+                    else{
                         //관리자 코드가 틀렸을 때만 경고
                         JOptionPane.showMessageDialog(SignUP.this,
                                 "Manager Code가 올바르지 않습니다.");
@@ -347,7 +350,10 @@ public class SignUP extends JFrame {
                         svo.setStd_address(mem_address);
                         svo.setStd_email(mem_email);
                         ss.insert("student.insertStd", svo); //학번
+
                         mvo.setStdno(svo.getStdno());
+
+
                     } else { //강사일경우 수행한다.
                         AdminVO avo = new AdminVO();
                         avo.setAd_name(mem_name);

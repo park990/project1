@@ -42,4 +42,10 @@ public class AdminVO {
     public void setAd_email(String ad_email) {
         this.ad_email = ad_email;
     }
+
+    @Override
+    public String toString() {
+        return ad_name + " (" + adno + ")"; //강사명 콤보박스에 동명이인 선택 방지를 위해
+        // 강사명(강사번호) 형식으로 보이도록 함
+    }
 }

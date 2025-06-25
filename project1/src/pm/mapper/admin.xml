@@ -14,4 +14,35 @@
         INSERT INTO std_t (std_name, std_address, std_phone, std_email)
         VALUES (#{std_name}, #{std_address}, #{std_phone}, #{std_email})
     </insert>
+
+
+    <!--강사 페이지 -->
+    <select id="all" resultType="pm.vo.AdminVO" parameterType="Map">
+        SELECT * FROM admin_t
+    </select>
+
+    <!--강사 이름으로 검색-->
+    <select id="admin_search" resultType="pm.vo.AdminVO" parameterType="String">
+        SELECT adno, ad_name, ad_phone, ad_email
+        FROM admin_t
+        WHERE ad_name LIKE CONCAT('%', #{ad_name}, '%')
+    </select>
+
+    <!--재직중인 강사의 이름과 사번을 출력-->
+    <select id="selectActiveAdmins" resultType="pm.vo.AdminVO">
+        SELECT adno, ad_name
+        FROM admin_t
+    </select>
+    <!--추후 조건문 추가하기-->
+
+    <!--강사 정보 수정-->
+    <update id="modify" parameterType="pm.vo.AdminVO">
+        UPDATE admin_t
+        SET ad_name = #{ad_name},
+        adno = #{adno},
+        ad_phone = #{ad_phone},
+        ad_address = #{ad_address},
+        ad_email = #{ad_email}
+        WHERE adno = #{adno}
+    </update>
 </mapper>

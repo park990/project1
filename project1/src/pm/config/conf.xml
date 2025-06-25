@@ -18,5 +18,11 @@
         <mapper resource="pm/mapper/member.xml"/>
         <mapper resource="pm/mapper/admin.xml"/>
         <mapper resource="pm/mapper/student.xml"/>
+        <mapper resource="pm/mapper/class.xml"/>
+        <mapper resource="pm/mapper/enrolledStudent.xml"/>
+        <mapper resource="pm/mapper/test.xml"/>
+        <mapper resource="pm/mapper/test_anw.xml"/>
+        <mapper resource="pm/mapper/test_item.xml"/>
+        <mapper resource="pm/mapper/test_ques.xml"/>
     </mappers>
 </configuration>
