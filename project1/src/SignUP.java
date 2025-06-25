@@ -219,11 +219,21 @@ public class SignUP extends JFrame {
         center_p.add(address_l2);
 
         // 11. 강사용 체크 박스
+
+        center_p.add(new JLabel("Manager Code"));
+        center_p.add (new JTextField(5));
+        JLabel managerLable =new JLabel("※ 매니저만 입력 해주십시오");
+        managerLable.setFont(new Font("맑은 고딕", Font.ITALIC, 10));
+        managerLable.setEnabled(false);
+        center_p.add(managerLable);
+
+
         adminUser_l = new JLabel(" ");
+        center_p.add(adminUser_l);
         adminUser_box = new JCheckBox("강사용 계정");
         adminUser_box.setCursor(hand);
-        center_p.add(adminUser_l);
         center_p.add(adminUser_box);
+
 
         // 버튼 영역
         bottom_p = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 10));
