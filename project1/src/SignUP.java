@@ -22,9 +22,10 @@ public class SignUP extends JFrame {
     JPanel center_p, bottom_p, phone_p, birth_p, gender_p, bkCode_p;
     //라벨
     JLabel id_l, pw_l, pwInfo_l, pwConfirm_l, name_l, birth_l, gender_l, phone_l, dash_l, dash_2,
-            bkCode_l, bkCodeInfo_l, adminUser_l, email_l, address_l;
+            bkCode_l, bkCodeInfo_l, adminUser_l, email_l, address_l, managerCode_l, managerCodeInfo_l;
     //텍스트필드
-    JTextField id_tf, name_tf, birth_tf, phone1_tf, phone2_tf, phone3_tf, bkCode_tf, email_tf, address_tf;
+    JTextField id_tf, name_tf, birth_tf, phone1_tf, phone2_tf, phone3_tf, bkCode_tf, email_tf,
+            address_tf, managerCode_tf;
     //패스워드필드
     JPasswordField pw_f, pwConfirm_tf;
     //콤보박스
@@ -47,10 +48,7 @@ public class SignUP extends JFrame {
         Cursor hand=new Cursor(Cursor.HAND_CURSOR);
 
 
-        // 중앙 패널 (8행 3열)
-        center_p = new JPanel(new GridLayout(13, 3, 10, 10));
-
-
+        // 중앙 패널
         center_p = new JPanel(new GridLayout(12, 3, 10, 10));
 
         // 바텀 패널
@@ -147,7 +145,6 @@ public class SignUP extends JFrame {
         male_rbt.setCursor(hand);
         female_rbt.setCursor(hand);
 
-
         gender_p = new JPanel(new FlowLayout(FlowLayout.LEFT));
         center_p.add(gender_l);
         gender_p.add(male_rbt);
@@ -161,15 +158,10 @@ public class SignUP extends JFrame {
         gbc2.insets = new Insets(0, 2, 0, 2); //컴포넌트 주변 여백 설정
 
         phone_l = new JLabel("전화번호");
-
-
         phone1_tf = new JTextField(4);
-
         phone1_tf.setDocument(new textFieldLimit(4));
-
         phone2_tf = new JTextField(4);
         phone2_tf.setDocument(new textFieldLimit(4));
-
         phone3_tf = new JTextField(4);
         phone3_tf.setDocument(new textFieldLimit(4));
         dash_l = new JLabel("-");
@@ -218,20 +210,19 @@ public class SignUP extends JFrame {
         center_p.add(address_tf);
         center_p.add(address_l2);
 
-        // 11. 강사용 체크 박스
+        // 11. Manager Code
+        center_p.add(managerCode_l = new JLabel("Manager Code"));
+        center_p.add(managerCode_tf = new JTextField());
+        managerCodeInfo_l = new JLabel("※ 매니저만 입력 해주십시오");
+        managerCodeInfo_l.setFont(new Font("맑은 고딕", Font.ITALIC, 10));
+        managerCodeInfo_l.setEnabled(false);
+        center_p.add(managerCodeInfo_l);
 
-        center_p.add(new JLabel("Manager Code"));
-        center_p.add (new JTextField(5));
-        JLabel managerLable =new JLabel("※ 매니저만 입력 해주십시오");
-        managerLable.setFont(new Font("맑은 고딕", Font.ITALIC, 10));
-        managerLable.setEnabled(false);
-        center_p.add(managerLable);
-
-
+        // 12. 강사용 체크 박스
         adminUser_l = new JLabel(" ");
-        center_p.add(adminUser_l);
         adminUser_box = new JCheckBox("강사용 계정");
         adminUser_box.setCursor(hand);
+        center_p.add(adminUser_l);
         center_p.add(adminUser_box);
 
 
@@ -323,15 +314,16 @@ public class SignUP extends JFrame {
                     //3. Mybatis 설정
                     factory_open();
                     SqlSession ss = factory.openSession();
-                    //아이디 중복 체크
+                    //4. 아이디 중복 체크
                     int idCheck = ss.selectOne("member.checkId", mem_id);
                     if (idCheck > 0) {
                         id_tf.setForeground(Color.RED);
                         id_tf.setFont(new Font("맑은 고딕", Font.BOLD, 13));
-                        id_tf.setForeground(Color.BLACK);
                         JOptionPane.showMessageDialog(SignUP.this,
                                 "이미 존재하는 아이디입니다. 다른 아이디를 입력해주세요.");
+                        id_tf.setForeground(Color.BLACK);
                         id_tf.setText(""); //텍스트 초기화
+                        id_tf.setFont(UIManager.getFont("TextField.font"));
                         return;
                     }
 
@@ -354,7 +346,7 @@ public class SignUP extends JFrame {
                         mvo.setAdno(avo.getAdno());
                     }
 
-                    //vo객체 생성 및 값 설정
+                    //5. vo객체 생성 및 값 설정
                     mvo.setMem_id(mem_id); //아이디
                     mvo.setMem_pw(mem_pw); //패스워드
                     mvo.setMem_name(mem_name); //이름
@@ -366,7 +358,6 @@ public class SignUP extends JFrame {
                     mvo.setMem_role(mem_role); //사용자 유형, 강사인지? 학생인지?
                     mvo.setMem_email(mem_email);//멤버 email 추가
                     mvo.setMem_address(mem_address);//멤버 address 추가
-
 
                     //6. 최종 insert
                     int res = ss.insert("member.insertMember", mvo);
@@ -385,7 +376,6 @@ public class SignUP extends JFrame {
                     JOptionPane.showMessageDialog(SignUP.this,
                             "에러 발생: " + ex.getMessage());
                 }
-
             }
         });
 
