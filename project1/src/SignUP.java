@@ -267,6 +267,7 @@ public class SignUP extends JFrame {
                 String phone2 = phone2_tf.getText().trim();
                 String phone3 = phone3_tf.getText().trim();
                 String mem_phone = phone1 + phone2 + phone3;
+                String managerCode = managerCode_tf.getText().trim();
 
                 //생년월일 콤보박스 값 가져오기
                 String year = (String) year_cmb.getSelectedItem();
@@ -288,6 +289,8 @@ public class SignUP extends JFrame {
                 String mem_email = email_tf.getText().trim();
                 String mem_address = phone1_tf.getText().trim();
                 String mem_bkCode = bkCode_tf.getText().trim();
+                //관리자 여부
+                String mem_admin_inputOrNot = "0"; //기본값: 관리자가 아님
 
                 // 2. 유효성 검사
                 if (mem_id.isEmpty() || mem_pw.isEmpty() || mem_pw2.isEmpty() || mem_name.isEmpty()
@@ -309,7 +312,8 @@ public class SignUP extends JFrame {
                             "아이디는 영문자와 숫자만 입력 가능합니다.");
                     return;
                 }
-
+// String str1 =  "admin"
+                //String str2 = new String("admin")
                 try {
                     //3. Mybatis 설정
                     factory_open();
@@ -326,8 +330,18 @@ public class SignUP extends JFrame {
                         id_tf.setFont(UIManager.getFont("TextField.font"));
                         return;
                     }
+                    //5. 관리자 설정
+                    if (managerCode.equals("admin")) {
+                        mem_admin_inputOrNot = "1"; //관리자 코드가 맞다면 1을 컬럼값에 저장
+                                                    //1은 관리자임
+                    } else if (managerCode.length()<1) {
+                        //관리자 코드가 틀렸을 때만 경고
+                        JOptionPane.showMessageDialog(SignUP.this,
+                                "Manager Code가 올바르지 않습니다.");
+                        return;
+                    }
 
-                    MemberVO mvo = new MemberVO(); //멤버vo 객체 생성
+                    MemberVO mvo = new MemberVO(); //Member vo 객체 생성
                     if (!adminUser_box.isSelected()) { //회원이 학생일경우 수행한다.
                         StudentVO svo = new StudentVO();
                         svo.setStd_name(mem_name);
@@ -346,7 +360,7 @@ public class SignUP extends JFrame {
                         mvo.setAdno(avo.getAdno());
                     }
 
-                    //5. vo객체 생성 및 값 설정
+                    //6. Member vo에 값 설정
                     mvo.setMem_id(mem_id); //아이디
                     mvo.setMem_pw(mem_pw); //패스워드
                     mvo.setMem_name(mem_name); //이름
@@ -358,6 +372,7 @@ public class SignUP extends JFrame {
                     mvo.setMem_role(mem_role); //사용자 유형, 강사인지? 학생인지?
                     mvo.setMem_email(mem_email);//멤버 email 추가
                     mvo.setMem_address(mem_address);//멤버 address 추가
+                    mvo.setMem_admin_inputOrNot(mem_admin_inputOrNot);
 
                     //6. 최종 insert
                     int res = ss.insert("member.insertMember", mvo);

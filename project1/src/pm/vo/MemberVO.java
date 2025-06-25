@@ -2,8 +2,17 @@ package pm.vo;
 
 public class MemberVO {
     private String mem_id, mem_pw, mem_quit, mem_joindate,
-            mem_role, mem_name, mem_gender, mem_phone, mem_birth, mem_bkCode, mem_email, mem_address;
+            mem_role, mem_name, mem_gender, mem_phone, mem_birth, mem_bkCode, mem_email, mem_address,
+            mem_admin_inputOrNot;
     private String mem_idx, stdno, adno;
+
+    public String getMem_admin_inputOrNot() {
+        return mem_admin_inputOrNot;
+    }
+
+    public void setMem_admin_inputOrNot(String mem_admin_inputOrNot) {
+        this.mem_admin_inputOrNot = mem_admin_inputOrNot;
+    }
 
     public String getMem_address() {
         return mem_address;

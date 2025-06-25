@@ -41,11 +41,11 @@
         INSERT INTO member_t (
         mem_id, mem_pw, mem_quit, mem_joindate, mem_role,
         mem_name, mem_gender, mem_phone, mem_birth, mem_bkCode,
-        mem_email, mem_address, stdno, adno)
+        mem_email, mem_address, stdno, adno, mem_admin_inputOrNot)
         VALUES (
         #{mem_id}, #{mem_pw}, #{mem_quit}, NOW(), #{mem_role},
         #{mem_name}, #{mem_gender}, #{mem_phone}, #{mem_birth}, #{mem_bkCode},
-        #{mem_email}, #{mem_address}, #{stdno}, #{adno})
+        #{mem_email}, #{mem_address}, #{stdno}, #{adno}, #{mem_admin_inputOrNot})
     </insert>
 
     <!--중복된 id 검색**********************************-->
