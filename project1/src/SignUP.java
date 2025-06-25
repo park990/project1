@@ -225,7 +225,6 @@ public class SignUP extends JFrame {
         center_p.add(adminUser_l);
         center_p.add(adminUser_box);
 
-
         // 버튼 영역
         bottom_p = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 10));
         join_bt = new JButton("가입하기");
@@ -312,8 +311,7 @@ public class SignUP extends JFrame {
                             "아이디는 영문자와 숫자만 입력 가능합니다.");
                     return;
                 }
-// String str1 =  "admin"
-                //String str2 = new String("admin")
+
                 try {
                     //3. Mybatis 설정
                     factory_open();
@@ -341,7 +339,7 @@ public class SignUP extends JFrame {
                         return;
                     }
 
-                    MemberVO mvo = new MemberVO(); //Member vo 객체 생성
+                    MemberVO mvo = new MemberVO(); //멤버vo 객체 생성
                     if (!adminUser_box.isSelected()) { //회원이 학생일경우 수행한다.
                         StudentVO svo = new StudentVO();
                         svo.setStd_name(mem_name);
