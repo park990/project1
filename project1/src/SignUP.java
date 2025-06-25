@@ -47,8 +47,8 @@ public class SignUP extends JFrame {
         Cursor hand=new Cursor(Cursor.HAND_CURSOR);
 
 
-        // 중앙 패널 (8행 3열)
-        center_p = new JPanel(new GridLayout(13, 3, 10, 10));
+        // 중앙 패널
+        center_p = new JPanel(new GridLayout(12, 3, 10, 10));
 
         // 바텀 패널
         center_p.setBorder(BorderFactory.createEmptyBorder(
