@@ -1,3 +1,4 @@
+import pm.vo.MemberVO;
 import pm.vo.StudentVO;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -40,7 +41,7 @@ public class StudentInfoDialog extends JDialog {
         //학생정보 db연동하여 출력
         jTextField1.setText(stVO.getStd_name());
         jTextField2.setText(stVO.getStdno());
-        //jTextField3.setText(stVO.getStdno()); //회원 ID
+//        jTextField3.setText(mvo.getMem_id()); //회원 ID **********************************
         jTextField4.setText(stVO.getStd_phone());
         jTextField6.setText(stVO.getStd_address());
         jTextField7.setText(stVO.getStd_email());
@@ -81,6 +82,7 @@ public class StudentInfoDialog extends JDialog {
                 String std_name = jTextField5.getText().trim();
                 String stdno = jTextField8.getText().trim();
                 //String std_name = jTextField5.getText().trim();  //회원 아이디
+
                 String std_phone = jTextField10.getText().trim();
                 String std_address = jTextField11.getText().trim();
                 String std_email = jTextField12.getText().trim();

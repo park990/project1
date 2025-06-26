@@ -141,7 +141,8 @@ public class LoginFrame extends JFrame {
                     System.out.println("강사 아이디: " + idstring + "\r\n" + "강사 비밀번호: " + pwstring);
                     boolean b =mem_if_vo_isnull("member.adm_login");
                     if(b){//강사로그인에 성공햇다면
-                        new AdminFrame();
+
+                        new AdminFrame();//**********************
                         dispose();
                     }
 

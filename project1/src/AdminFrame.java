@@ -1,6 +1,7 @@
 //import ClassInfoDialog;
 import pm.vo.AdminVO;
 import pm.vo.ClassVO;
+import pm.vo.MemberVO;
 import pm.vo.StudentVO;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -104,8 +105,12 @@ public class AdminFrame extends JFrame {
                     //stdTable에서 선택된 행, index를 얻어내자
                     i = stdTable.getSelectedRow(); //List<StudentVO> 의 값을 얻어낼 수 있다.
                     StudentVO stVO = stuList.get(i);
+
+                    // 학생의 학번을 통해 member테이블의 학번이랑 연결해서 강사의 강사번호가 null인것중 get(i)의 학번의 아이디를 갖고와서 화면에 표출하자
+
+
                     //System.out.println(stVO);
-                    new StudentInfoDialog(AdminFrame.this, true, stVO);
+                    new StudentInfoDialog(AdminFrame.this, true, stVO);//**************************************
 
                 }
             }
