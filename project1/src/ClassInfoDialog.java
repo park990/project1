@@ -39,13 +39,15 @@ public class ClassInfoDialog extends JDialog {
     public ClassInfoDialog(AdminFrame parent, boolean modal, ClassVO cVO) {
         super(parent, modal);
 
-        this.setTitle("강의 상세정보");
 
         //cardLayout 초기화
         cardLayout = new CardLayout();
 
         initComponents(); //화면구성
         init(); //db연결
+
+        this.setTitle("강의 상세정보");// 재윤** 이거 initcomponets();보다 위로 가있어서 적용이 안됐음 그래서 아래로 보냄
+
 
         //강의정보 db 연동하여 출력
         className_tf.setText(cVO.getLec_name());
@@ -240,7 +242,7 @@ public class ClassInfoDialog extends JDialog {
                         String t_name = t_nameField.getText().trim();
                         String qnum = qnumField.getText().trim();
 
-                        StringBuffer sb = new StringBuffer();
+//                        StringBuffer sb = new StringBuffer();
                         if (t_name.length() > 0) {
                             System.out.println(t_name);
                         }else{
