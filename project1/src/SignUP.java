@@ -332,10 +332,9 @@ public class SignUP extends JFrame {
                     if (managerCode.equals("admin")) {
                         mem_admin_inputOrNot = "1"; //관리자 코드가 맞다면 1을 컬럼값에 저장
                                                     //1은 관리자임
-                    }else if(managerCode == null){//아무것도 입력 안했을때 managerCode.equals("") 일 수도 있음
+                    }else if(managerCode.equals("")){//아무것도 입력 안했을때 managerCode.equals("") 일 수도 있음
 
-                    }
-                    else{
+                    } else {
                         //관리자 코드가 틀렸을 때만 경고
                         JOptionPane.showMessageDialog(SignUP.this,
                                 "Manager Code가 올바르지 않습니다.");
