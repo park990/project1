@@ -12,6 +12,7 @@ public class Frame1 extends JFrame {
     JMenuBar bar;
 
     public Frame1() {
+        Cursor hand = new Cursor(Cursor.HAND_CURSOR);
         south_p = new JPanel(new GridLayout(3, 0));
         south_p.add(gp1 = new JPanel());
 
@@ -33,7 +34,7 @@ public class Frame1 extends JFrame {
 
         gp2.add(loginB = new JButton("로그인"));
         loginB.setFont(new Font("굴림", Font.BOLD, 16));
-        loginB.setCursor(new Cursor(Cursor.HAND_CURSOR));// 로그인 버튼에 손 모양
+        loginB.setCursor(hand);// 로그인 버튼에 손 모양
         loginB.setPreferredSize(new Dimension(100, 40)); // 버튼 크기
 
 
@@ -41,7 +42,7 @@ public class Frame1 extends JFrame {
 
         gp2.add(signupB = new JButton("회원가입"));
         signupB.setFont(new Font("굴림", Font.BOLD, 16));
-        signupB.setCursor(new Cursor(Cursor.HAND_CURSOR));// 사인업 버튼에 손 모양
+        signupB.setCursor(hand);// 사인업 버튼에 손 모양
         signupB.setPreferredSize(new Dimension(100, 40)); // 버튼 크기
 //        signupB.setBackground(new Color(204, 255, 255));  // 연한 하늘색
 //        signupB.setFocusPainted(false);
@@ -70,7 +71,7 @@ public class Frame1 extends JFrame {
         signupB.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                new SignUP();
             }
         });
 

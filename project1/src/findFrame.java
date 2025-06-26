@@ -15,7 +15,7 @@ import java.util.Map;
 
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import pm.vo.memberVO;
+import pm.vo.MemberVO;
 
 import javax.swing.*;
 
@@ -26,7 +26,7 @@ public class findFrame extends javax.swing.JFrame {
     SqlSessionFactory factory;// 펙토리를 활용하기 위해 갖고옴
     JCheckBox teacherBox;
     SqlSession ss;
-    memberVO vo;
+    MemberVO vo;
     String idCode;
     String pwID;
     String pwCode;

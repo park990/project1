@@ -2,8 +2,7 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import pm.vo.memberVO;
-import pm.vo.teachersVO;
+import pm.vo.MemberVO;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,6 +14,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
+
 
 public class LoginFrame extends JFrame {
     JPanel north_p, Np1;
@@ -32,7 +32,9 @@ public class LoginFrame extends JFrame {
 
     public LoginFrame() throws IOException {
 
-        this.setTitle("로그인");
+        Cursor hand = new Cursor(Cursor.HAND_CURSOR);
+        this.setTitle("로그인  ");
+
 
         init();
         north_p = new JPanel(new BorderLayout());
@@ -98,13 +100,13 @@ public class LoginFrame extends JFrame {
 
         // 로그인버튼
         b1 = new JButton("로그인");
-        b1.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        b1.setCursor(hand);
 
         Cgp1_1 = new JPanel(new FlowLayout(FlowLayout.RIGHT, 1, 0));// 강사와 로그인 사이의 간격을 띄움
 
         // 강사 체크박스와 버튼 패널에 삽입
         Cgp1_1.add(teacher_ckbox = new JCheckBox("강사"));
-        teacher_ckbox.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        teacher_ckbox.setCursor(hand);
         Cgp1_1.add(b1);
 
         // 강사 로그인들어간 패널과 전체화면과의 간격 설정
@@ -139,38 +141,51 @@ public class LoginFrame extends JFrame {
                 if (teacher_ckbox.isSelected()) {// 강사용 로그인 ****************************************************************
 
                     System.out.println("강사 아이디: " + idstring + "\r\n" + "강사 비밀번호: " + pwstring);
-                    mem_if_vo_isnull("member.adm_login");
+                    boolean b =mem_if_vo_isnull("member.adm_login");
+                    if(b){//강사로그인에 성공햇다면
 
+                        new AdminFrame();//**********************
+                        dispose();
+                    }
 
                 } else {// 학생용 로그인*********************************************************************************
 
                     System.out.println("입력한 아이디: " + idstring + "\r\n" + "입력한 비밀번호: " + pwstring);
 
-                    mem_if_vo_isnull("member.st_login");// %%%함수
+                    boolean b =mem_if_vo_isnull("member.st_login");// %%%함수
 
+                    if(b){//학생 로그인에 성공했다면
+
+
+                    }
                 }
+                //인증 과정 끝
+
+
             }
         });// 로그인 버튼 클릭 관리자
 
 
     }// 생성자의 마지막
 
-    private void mem_if_vo_isnull(String target) { //학생용 로그인 인증
+    private boolean mem_if_vo_isnull(String target) { //학생용 로그인 인증
+        boolean s=false;
         Map<String, String> m = new HashMap<>();
         m.put("ID", idstring);
         m.put("PW", pwstring);   //map 으로 하고 픈데
 
-        memberVO vo = ss.selectOne(target, m);
+        MemberVO vo = ss.selectOne(target, m);
 
-        if (vo == null) {
+        if (vo == null) {//로그인 실패
 
             showfindFrame(); // 함수&&
 
         } else {
             JOptionPane.showMessageDialog(LoginFrame.this, "로그인 완료!");
+            s=true;
         }
         ss.close();
-
+        return s;
     }// 로그인 인증함수
 
 

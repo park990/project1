@@ -8,13 +8,21 @@
             <transactionManager type="JDBC"/>
             <dataSource type="POOLED">
                 <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
-                <property name="url" value="jdbc:mysql://localhost:3306/my_db"/>
-                <property name="username" value="root"/>
+                <property name="url" value="jdbc:mysql://localhost:3306/project"/>
+                <property name="username" value="project"/>
                 <property name="password" value="1111"/>
             </dataSource>
         </environment>
     </environments>
     <mappers>
         <mapper resource="pm/mapper/member.xml"/>
+        <mapper resource="pm/mapper/admin.xml"/>
+        <mapper resource="pm/mapper/student.xml"/>
+        <mapper resource="pm/mapper/class.xml"/>
+        <mapper resource="pm/mapper/enrolledStudent.xml"/>
+        <mapper resource="pm/mapper/test.xml"/>
+        <mapper resource="pm/mapper/test_anw.xml"/>
+        <mapper resource="pm/mapper/test_item.xml"/>
+        <mapper resource="pm/mapper/test_ques.xml"/>
     </mappers>
 </configuration>
