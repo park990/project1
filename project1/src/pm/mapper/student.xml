@@ -50,13 +50,13 @@
         <association property="mvo" javaType="pm.vo.MemberVO"
                      select="member.ID" column="stdno">
 
-        </association>          <!--empVO에 1대1로 넣어주고 싶은것이 dvo-->
+        </association>          <!--memvo에 1대1로 넣어주고 싶은것이 mvo-->
 
     </resultMap>
 
 
     <select id="get_memID" resultMap="res" parameterType="String">
-        SELECT * FROM std_t WHERE stdno = #{stdno}
+        SELECT * FROM std_t WHERE stdno = #{str}
     </select>
     <!--*************************************w재윤*****************************************************************-->
 

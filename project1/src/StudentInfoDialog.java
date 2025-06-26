@@ -31,11 +31,11 @@ public class StudentInfoDialog extends JDialog {
         jPanel1.add(jPanel9, "stdInfo");     // 수강생 정보
         jPanel1.add(jPanel13, "stdModify");     //수강생 수정
 
+        init(); //db연결
         this.setBounds(300,200,380,580);
 
         this.setTitle("학생 상세정보");
 
-        init(); //db연결
 
         //연동되는지 콘솔에 출력
         //System.out.println(stVO.getStd_name());
@@ -46,6 +46,7 @@ public class StudentInfoDialog extends JDialog {
 
 
         // result map 활용 재윤*********************************
+
         SqlSession ss = factory.openSession();
         StudentVO svoMVO = ss.selectOne("student.get_memID",stVO.getStdno());
         jTextField3.setText(svoMVO.getMvo().getMem_id()); //회원 ID **********************************
@@ -57,7 +58,7 @@ public class StudentInfoDialog extends JDialog {
 
         jTextField5.setText(stVO.getStd_name());
         jTextField8.setText(stVO.getStdno());
-        //jTextField9.setText(stVO.getStd_phone()); //회원 ID
+        jTextField9.setText(svoMVO.getMvo().getMem_id()); //회원 ID
         jTextField10.setText(stVO.getStd_phone());
         jTextField11.setText(stVO.getStd_address());
         jTextField12.setText(stVO.getStd_email());

@@ -1,7 +1,9 @@
+import org.apache.ibatis.session.SqlSession;
 import pm.vo.AdminVO;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import pm.vo.MemberVO;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -17,10 +19,20 @@ public class AdminInfoDialog extends JDialog {
         super(parent, modal);
         initComponents(); //화면구성
 
+        //재윤 init 위로 올렸음 init가 아래 factory설정한것보다 아래 있으니까 factory가 null값이 나옴 그래서 위로 올림
+        init(); //DB연동
         //강사 정보 출력
         jTextField1.setText(adVO.getAd_name());
         jTextField2.setText(adVO.getAdno());
-        //jTextField3.setText(adVO.getAd());  //아이디
+
+        // 재윤 아이디설정***************************************************************************************
+
+        SqlSession ss =factory.openSession();
+        String str = adVO.getAdno();
+        MemberVO mvo = ss.selectOne("member.adID",str);
+        jTextField3.setText(mvo.getMem_id());  //아이디
+        // 재윤 아이디설정*****************************************************************************************
+
         jTextField4.setText(adVO.getAd_phone());
         jTextField5.setText(adVO.getAd_address());
         jTextField6.setText(adVO.getAd_email());
@@ -90,7 +102,7 @@ public class AdminInfoDialog extends JDialog {
             }
         });
 
-        init(); //DB연동
+//        init(); //DB연동
 
         this.setBounds(300,200,450,650);
         this.setVisible(true);
