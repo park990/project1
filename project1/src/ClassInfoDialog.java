@@ -242,7 +242,6 @@ public class ClassInfoDialog extends JDialog {
                         String t_name = t_nameField.getText().trim();
                         String qnum = qnumField.getText().trim();
 
-//                        StringBuffer sb = new StringBuffer();
                         if (t_name.length() > 0) {
                             System.out.println(t_name);
                         }else{
@@ -258,9 +257,7 @@ public class ClassInfoDialog extends JDialog {
                         if (nd_cnt == 0) {// 모든 칸에 다 입력을 했을 때
                             SqlSession ss= factory.openSession();
                             TestVO tvo = new TestVO();
-
-
-
+                            
                             tvo.setLec_no(cVO.getLec_no());
                             tvo.setTest_name(t_nameField.getText());
                             tvo.setTest_ques_num(qnumField.getText());
