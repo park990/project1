@@ -52,6 +52,13 @@
     <select id = "checkId" resultType="int" parameterType="String">
         SELECT COUNT(*) FROM member_t WHERE mem_id = #{value}
     </select>
+
+    <!--*********************재윤**************************result MAP 활용***************-->
+    <select id = "ID" resultType="pm.vo.MemberVO" parameterType="String">
+        SELECT mem_id FROM member_t WHERE stdno = #{value} and adno is null
+    </select>
+
+
 </mapper>
 
 

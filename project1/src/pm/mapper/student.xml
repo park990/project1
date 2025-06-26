@@ -45,4 +45,19 @@
     </select>
 
 
+<!--*************************************w재윤*****************************************************************-->
+    <resultMap id="res" type="pm.vo.StudentVO"><!--아래 resultMap이랑 같아야됌--><!--두번쨰 작업-->
+        <association property="mvo" javaType="pm.vo.MemberVO"
+                     select="member.ID" column="stdno">
+
+        </association>          <!--empVO에 1대1로 넣어주고 싶은것이 dvo-->
+
+    </resultMap>
+
+
+    <select id="get_memID" resultMap="res" parameterType="String">
+        SELECT * FROM std_t WHERE stdno = #{stdno}
+    </select>
+    <!--*************************************w재윤*****************************************************************-->
+
 </mapper>

@@ -106,6 +106,7 @@ public class AdminFrame extends JFrame {
                     i = stdTable.getSelectedRow(); //List<StudentVO> 의 값을 얻어낼 수 있다.
                     StudentVO stVO = stuList.get(i);
 
+
                     // 학생의 학번을 통해 member테이블의 학번이랑 연결해서 강사의 강사번호가 null인것중 get(i)의 학번의 아이디를 갖고와서 화면에 표출하자
 
 
@@ -575,7 +576,8 @@ public class AdminFrame extends JFrame {
         }
         //</editor-fold>
 
-        /* Create and display the form */
+
+        // 필요한 경우 dummyMember.setId("...") 등 초기화
         java.awt.EventQueue.invokeLater(() -> new AdminFrame().setVisible(true));
     }
 

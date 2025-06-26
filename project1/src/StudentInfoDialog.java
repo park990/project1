@@ -1,3 +1,4 @@
+import org.apache.ibatis.session.SqlSession;
 import pm.vo.MemberVO;
 import pm.vo.StudentVO;
 import org.apache.ibatis.io.Resources;
@@ -9,6 +10,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.Reader;
+import java.util.List;
 
 //학생 상세 창
 public class StudentInfoDialog extends JDialog {
@@ -41,7 +43,14 @@ public class StudentInfoDialog extends JDialog {
         //학생정보 db연동하여 출력
         jTextField1.setText(stVO.getStd_name());
         jTextField2.setText(stVO.getStdno());
-//        jTextField3.setText(mvo.getMem_id()); //회원 ID **********************************
+
+
+        // result map 활용 재윤*********************************
+        SqlSession ss = factory.openSession();
+        StudentVO svoMVO = ss.selectOne("student.get_memID",stVO.getStdno());
+        jTextField3.setText(svoMVO.getMvo().getMem_id()); //회원 ID **********************************
+        // result map 활용 재윤**********************************
+
         jTextField4.setText(stVO.getStd_phone());
         jTextField6.setText(stVO.getStd_address());
         jTextField7.setText(stVO.getStd_email());

@@ -2,6 +2,15 @@ package pm.vo;
 
 public class StudentVO {
     private String stdno, std_name, std_address, std_phone, std_email;
+    private MemberVO mvo;
+
+    public MemberVO getMvo() {
+        return mvo;
+    }
+
+    public void setMvo(MemberVO mvo) {
+        this.mvo = mvo;
+    }
 
     public String getStdno() {
         return stdno;
