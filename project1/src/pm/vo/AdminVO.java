@@ -2,6 +2,7 @@ package pm.vo;
 
 public class AdminVO {
     private String adno, ad_name, ad_address, ad_phone, ad_email;
+    private String mem_admin_inputOrNot;
 
     public String getAdno() {
         return adno;
@@ -41,6 +42,15 @@ public class AdminVO {
 
     public void setAd_email(String ad_email) {
         this.ad_email = ad_email;
+    }
+
+    public String getMem_admin_inputOrNot() {
+        return mem_admin_inputOrNot;
+    }
+
+
+    public void setMem_admin_inputOrNot(String mem_admin_inputOrNot) {
+        this.mem_admin_inputOrNot = mem_admin_inputOrNot;
     }
 
     @Override

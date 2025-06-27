@@ -15,6 +15,7 @@ import java.io.Reader;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,15 +40,13 @@ public class ClassInfoDialog extends JDialog {
     public ClassInfoDialog(AdminFrame parent, boolean modal, ClassVO cVO) {
         super(parent, modal);
 
+        this.setTitle("강의 상세정보");
 
         //cardLayout 초기화
         cardLayout = new CardLayout();
-
+        esList = new ArrayList<>();
         initComponents(); //화면구성
         init(); //db연결
-        this.setTitle("강의 상세정보");// 재윤** 이거 initcomponets();보다 위로 가있어서 적용이 안됐음 그래서 아래로 보냄
-
-
 
         //강의정보 db 연동하여 출력
         className_tf.setText(cVO.getLec_name());
@@ -171,7 +170,7 @@ public class ClassInfoDialog extends JDialog {
         cInfoCancle_bt.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //취소 클릭 시 어떻게 할 것인지?
+
                 dispose();
             }
         });
@@ -190,7 +189,6 @@ public class ClassInfoDialog extends JDialog {
                 esList = ss.selectList("lec_std_t.enrolledStudent", map);
                 ss.close();
                 enrolledStudentTable(esList); //수강중인 학생 테이블 출력하는 함수 enrolledStudentTable 호출
-
 
                 cardLayout.show(infoTable, "studentCard");
             }
@@ -214,7 +212,33 @@ public class ClassInfoDialog extends JDialog {
                 cardLayout.show(infoTable, "examCard");
             }
         });
-        // 시험 추가 버튼을 눌렀을 때 - 박준형 시작
+
+        //수강생 추가 버튼 클릭 시 //선영수정1
+        stdAdd_bt.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new AddStdToClass(ClassInfoDialog.this, true, cVO);
+            }
+        });
+        //선영수정1 끝
+
+        //삭제 버튼 클릭 시
+        stdDelete_bt.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                /* 아래 소스로 구현시 오류나서 구현한 함수를 통해 값을 가져와서 삭제되게 하였음*/
+                int i = jTable2.getSelectedRow(); // 이 시점에 행을 가져와야 함!
+
+                EnrolledStudentVO esVO = esList.get(i);
+                SqlSession ss = factory.openSession();
+
+                ss.delete("lec_std_t.deleteEnrolledStudent", esVO.getStdno());
+                ss.commit();
+                enrolledStudentTable(esList);
+                ss.close();
+
+            }
+        });
 
         tAdd_bt.addActionListener(new ActionListener() {
             @Override
@@ -242,7 +266,7 @@ public class ClassInfoDialog extends JDialog {
                         String t_name = t_nameField.getText().trim();
                         String qnum = qnumField.getText().trim();
 
-//                        StringBuffer sb = new StringBuffer();
+                        StringBuffer sb = new StringBuffer();
                         if (t_name.length() > 0) {
                             System.out.println(t_name);
                         }else{
@@ -288,6 +312,7 @@ public class ClassInfoDialog extends JDialog {
 
             }
         });
+
         //시험 삭제 버튼을 눌렀을 때
         tDelete_bt.addActionListener(new ActionListener() {//시험 삭제 버튼을 눌렀을 때
             @Override
@@ -356,23 +381,38 @@ public class ClassInfoDialog extends JDialog {
             }
         });
         // 박준형 끝
+//25.06.25 선영수정2---------------------------------------------------------------------------------
 
-        //창 띄우자 마자 수강중인 학생 출력
-        Map<String, Object> map = new HashMap<>();
+        //들어오자마자 수강생 리스트 출력
+        Map<String, String> map = new HashMap<>();
         map.put("lec_no", cVO.getLec_no());
 
         SqlSession ss = factory.openSession();
         esList = ss.selectList("lec_std_t.enrolledStudent", map);
+        enrolledStudentTable(esList);
         ss.close();
-        enrolledStudentTable(esList); //수강중인 학생 테이블 출력하는 함수 enrolledStudentTable 호출
-
 
         this.setBounds(100, 20, 830, 800); //창 크기
         this.setVisible(true); //창 띄우기
     }
 
+    //수강중인 학생 목록
+    public List<EnrolledStudentVO> enrolledStudent(ClassVO cVO){
+        //System.out.println("여기 cVO:::::::::::::" + cVO.toString());
+        Map<String, Object> map = new HashMap<>();
+        map.put("lec_no", cVO.getLec_no());
+
+        SqlSession ss = factory.openSession();
+        List<EnrolledStudentVO> estdList = ss.selectList("lec_std_t.enrolledStudent", map);
+        //System.out.println("estdList.toString():: " + estdList.toString());
+        ss.close();
+
+
+        return estdList;
+    }
+
     //수강중인 학생 테이블 출력
-    private void enrolledStudentTable(List<EnrolledStudentVO> esList){
+    public void enrolledStudentTable(List<EnrolledStudentVO> esList){
 
         tableData = new String[esList.size()][std_name.length];
         int i = 0;
@@ -380,6 +420,7 @@ public class ClassInfoDialog extends JDialog {
             tableData[i][0] = esVO.getStd_name(); //수강생 이름 출력
             tableData[i][1] = esVO.getLec_name(); //강의명
             tableData[i][2] = esVO.getStd_phone(); //수강생 연락처
+
             i++;
         }
 
@@ -394,6 +435,8 @@ public class ClassInfoDialog extends JDialog {
         jTable2.revalidate();
         jTable2.repaint();
     }
+
+//선영수정2 끝---------------------------------------------------------------------
 
     //시험 목록 출력
     public void testViewTable(List<TestVO> testList){
@@ -435,8 +478,6 @@ public class ClassInfoDialog extends JDialog {
             Reader r = Resources.getResourceAsReader("pm/config/conf.xml");
             factory = new SqlSessionFactoryBuilder().build(r);
             r.close();
-
-            this.setTitle("관리자 페이지!");
 
         }catch (Exception e){
             e.printStackTrace();

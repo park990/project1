@@ -49,6 +49,9 @@
         #{lec_no}, #{lec_name}, #{adno}, #{lec_sdate}, #{lec_edate}, #{lec_limit}, #{lec_info}
         )
     </insert>
-
+    <select id="mylec" parameterType="String"  resultType="pm.vo.ClassVO">
+        SELECT * FROM lec_t l INNER JOIN admin_t a ON l.adno = a.adno
+        WHERE a.adno = #{adno}
+    </select>
 
 </mapper>

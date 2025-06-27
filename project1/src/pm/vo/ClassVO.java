@@ -4,9 +4,17 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class ClassVO {
-
+    private String lec_stdno;
     private String lec_no;
     private String lec_name, adno, lec_info, ad_name, lec_sdate, lec_edate, lec_limit, period;
+
+    public String getLec_stdno() {
+        return lec_stdno;
+    }
+
+    public void setLec_stdno(String lec_stdno) {
+        this.lec_stdno = lec_stdno;
+    }
 
     public String getLec_no() {
         return lec_no;
@@ -101,6 +109,8 @@ public class ClassVO {
         return "";
 
     }
+
+
 
 
 }

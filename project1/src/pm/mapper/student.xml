@@ -17,7 +17,7 @@
 
     <!--강사화면-->
     <select id="all" resultType="pm.vo.StudentVO" parameterType="Map">
-        SELECT * FROM std_t
+        SELECT * FROM std_t s INNER JOIN member_t m ON s.stdno = m.stdno WHERE mem_quit = 'N'
     </select>
 
     <!--수강생 정보 조회-->
@@ -44,8 +44,18 @@
         WHERE std_name LIKE CONCAT('%', #{std_name}, '%')
     </select>
 
+    <!--수강이 가능한 학생을 추출-->
+    <select id="availableStudent" resultType="pm.vo.StudentVO" parameterType="Map">
+        SELECT s.stdno, s.std_name, s.std_phone
+        FROM std_t s
+        WHERE s.stdno NOT IN (
+        SELECT stdno
+        FROM lec_std_t
+        WHERE lec_no = #{lec_no}
+        )
+    </select>
 
-<!--*************************************w재윤*****************************************************************-->
+    <!--*************************************w재윤*****************************************************************-->
     <resultMap id="res" type="pm.vo.StudentVO"><!--아래 resultMap이랑 같아야됌--><!--두번쨰 작업-->
         <association property="mvo" javaType="pm.vo.MemberVO"
                      select="member.ID" column="stdno">
@@ -59,5 +69,7 @@
         SELECT * FROM std_t WHERE stdno = #{str}
     </select>
     <!--*************************************w재윤*****************************************************************-->
+
+
 
 </mapper>

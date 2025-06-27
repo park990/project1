@@ -28,13 +28,11 @@ public class LoginFrame extends JFrame {
     findFrame ff;
     SqlSession ss;
     String idstring, pwstring;
-
+    MemberVO vo;
 
     public LoginFrame() throws IOException {
-
         Cursor hand = new Cursor(Cursor.HAND_CURSOR);
         this.setTitle("로그인");
-
 
         init();
         north_p = new JPanel(new BorderLayout());
@@ -142,9 +140,12 @@ public class LoginFrame extends JFrame {
 
                     System.out.println("강사 아이디: " + idstring + "\r\n" + "강사 비밀번호: " + pwstring);
                     boolean b =mem_if_vo_isnull("member.adm_login");
-                    if(b){//강사로그인에 성공햇다면
-
-                        new AdminFrame();//**********************
+                    if(b){//강사로그인에 성공했다면
+                        try {
+                            new AdminFrame(vo);
+                        } catch (IOException ex) {
+                            throw new RuntimeException(ex);
+                        }
                         dispose();
                     }
 
@@ -155,8 +156,12 @@ public class LoginFrame extends JFrame {
                     boolean b =mem_if_vo_isnull("member.st_login");// %%%함수
 
                     if(b){//학생 로그인에 성공했다면
-
-
+                        try {
+                            new StudentFrame(vo);
+                            dispose();
+                        } catch (IOException ex) {
+                            throw new RuntimeException(ex);
+                        }
                     }
                 }
                 //인증 과정 끝
@@ -174,7 +179,7 @@ public class LoginFrame extends JFrame {
         m.put("ID", idstring);
         m.put("PW", pwstring);   //map 으로 하고 픈데
 
-        MemberVO vo = ss.selectOne(target, m);
+        vo = ss.selectOne(target, m);
 
         if (vo == null) {//로그인 실패
 

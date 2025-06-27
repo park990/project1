@@ -9,7 +9,7 @@
             <dataSource type="POOLED">
                 <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
                 <property name="url" value="jdbc:mysql://localhost:3306/project"/>
-                <property name="username" value="project"/>
+                <property name="username" value="root"/>
                 <property name="password" value="1111"/>
             </dataSource>
         </environment>
@@ -24,5 +24,12 @@
         <mapper resource="pm/mapper/test_anw.xml"/>
         <mapper resource="pm/mapper/test_item.xml"/>
         <mapper resource="pm/mapper/test_ques.xml"/>
+        <mapper resource="pm/mapper/std.xml"/>
+        <mapper resource="pm/mapper/lec.xml"/>
+        <mapper resource="pm/mapper/item.xml"/>
+        <mapper resource="pm/mapper/std_anw.xml"/>
+        <mapper resource="pm/mapper/test_t.xml"/>
+        <mapper resource="pm/mapper/test_anw2.xml"/>
+        <mapper resource="pm/mapper/test_ques2.xml"/>
     </mappers>
 </configuration>
