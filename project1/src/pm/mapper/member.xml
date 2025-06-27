@@ -61,11 +61,19 @@
     <select id = "adID" resultType="pm.vo.MemberVO" parameterType="String">
         SELECT mem_id FROM member_t WHERE adno = #{value} and stdno is null
     </select>
-<!--id == "ID"인 select문은 학생의 ID를 표출하는 resultMap 활용 아래의 adID는 강사의 ID를 표출하는 거 resultmpa 활용 안했음-->
+    <!--id == "ID"인 select문은 학생의 ID를 표출하는 resultMap 활용 아래의 adID는 강사의 ID를 표출하는 거 resultmpa 활용 안했음-->
 
-    <select id = "NO" resultType="pm.vo.MemberVO" parameterType="String">
-        SELECT * FROM member_t
-    </select>
+    <update id="std_disable" parameterType="String">
+        UPDATE member_t
+        SET mem_quit = 'Y'
+        WHERE stdno = #{stdno}
+    </update>
+
+    <update id="ad_disable" parameterType="String">
+        UPDATE member_t
+        SET mem_quit = 'Y'
+        WHERE adno = #{adno}
+    </update>
 </mapper>
 
 

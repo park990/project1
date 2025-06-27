@@ -13,6 +13,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.*;
+import java.io.IOException;
 import java.io.Reader;
 import java.util.List;
 
@@ -33,16 +34,27 @@ public class AdminFrame extends JFrame {
     List<AdminVO> adList; //관리자
     List<ClassVO> lecList; //강의
 
+    AdminVO adminVO;
+
+    Reader r;
+    MemberVO vo;
 
     JMenuBar bar;
     JMenu file_M;
     JMenuItem logOut_item, exit_item;
 
     int i;
-
+    //박준형0627 선언
+    int admin; //0이면 강사, 1이면 관리자
+    //박준형0627 선언 끝
 
     //생성자
-    public AdminFrame() {
+    public AdminFrame(MemberVO vo) throws IOException {
+
+        this.vo = vo;
+        r = Resources.getResourceAsReader("pm/config/conf.xml");
+        factory = new SqlSessionFactoryBuilder().build(r);
+
         initComponents(); //화면구성
 
         //메뉴작업
@@ -63,6 +75,84 @@ public class AdminFrame extends JFrame {
 
         //DB연결
         init();
+        //박준형추가부분 시작
+        if(vo.getMem_admin_inputOrNot().equals("0")){//그냥 강사일 경우
+            jTabbedPane1.setEnabledAt(0,false);
+            jTabbedPane1.setEnabledAt(1,false);
+            //메서드 하나 만듦
+            mylec();
+            jTabbedPane1.setSelectedIndex(2);
+        }else {
+            admin =1;
+            allStudentData();
+        }
+
+        stdDel_bt.addActionListener(new ActionListener() { //학생 삭제 버튼을 눌렀을 때
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SqlSession ss = factory.openSession();
+                //member.xml에 내용 추가
+                int std_update_cnt = ss.update("member.std_disable",stuList.get(stdTable.getSelectedRow()).getStdno());
+
+                if(std_update_cnt >0){//회원 정보 변경
+                    ss.commit();
+                }else {
+                    ss.rollback();
+                }
+                ss.close();
+                allStudentData();
+            }
+        });
+        jButton12.addActionListener(new ActionListener() { // 강사 삭제 버튼을 눌렀을 때
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SqlSession ss = factory.openSession();
+                //member.xml에 내용 추가
+                int ad_update_cnt = ss.update("member.ad_disable",adList.get(adTable.getSelectedRow()).getAdno());
+
+                if(ad_update_cnt >0){//회원 정보 변경
+                    ss.commit();
+                }else {
+                    ss.rollback();
+                }
+                ss.close();
+                allAdminData();
+            }
+        });
+        jButton8.addActionListener(new ActionListener() { // 강의 삭제 버튼을 눌렀을 때
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SqlSession ss = factory.openSession();
+                //lec.xml에 내용 추가
+                int lec_del_cnt = ss.delete("lec.del_lec",lecList.get(lecTable.getSelectedRow()).getLec_no());
+
+                if(lec_del_cnt >0){//회원 정보 변경
+                    ss.commit();
+                }else {
+                    ss.rollback();
+                }
+                ss.close();
+                if(admin ==0) {
+                    mylec();
+                }else{
+                    allClassData();
+
+                }
+            }
+        });
+        //박준형추가부분 끝
+        SqlSession ss = factory.openSession();
+        adminVO = ss.selectOne("admin.get_no", vo.getAdno());
+        System.out.println("어드민::::::::" + adminVO.toString());
+
+        //일반강사(회원가입 시 admin을 입력하지 않은 강사)일 경우에 수강생탭, 강사탭 비활성화 선영수정
+//        if(adminVO != null && !adminVO.getMem_admin_inputOrNot().equals("1")){
+//            jTabbedPane1.setEnabledAt(0, false);
+//            jTabbedPane1.setEnabledAt(1, false);
+//            jTabbedPane1.setSelectedIndex(2);
+//            allClassData();
+//        }
+
         allStudentData();
 
         //이벤트 감지자 등록
@@ -72,13 +162,6 @@ public class AdminFrame extends JFrame {
                 System.exit(0); //프로그램 종료
             }
         });
-
-        /*exit_item.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-            }
-        }*/
 
         //상단 탭을 눌렀을 때 이벤트 감지자 등록
         jTabbedPane1.addChangeListener(new ChangeListener() {
@@ -105,13 +188,8 @@ public class AdminFrame extends JFrame {
                     //stdTable에서 선택된 행, index를 얻어내자
                     i = stdTable.getSelectedRow(); //List<StudentVO> 의 값을 얻어낼 수 있다.
                     StudentVO stVO = stuList.get(i);
-
-
-                    // 학생의 학번을 통해 member테이블의 학번이랑 연결해서 강사의 강사번호가 null인것중 get(i)의 학번의 아이디를 갖고와서 화면에 표출하자
-
-
                     //System.out.println(stVO);
-                    new StudentInfoDialog(AdminFrame.this, true, stVO);//**************************************
+                    new StudentInfoDialog(AdminFrame.this, true, stVO);
 
                 }
             }
@@ -200,17 +278,17 @@ public class AdminFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 //사용자가 입력한 값 추출
                 String lecName = jTextField3.getText().trim();
-
+                SqlSession ss = factory.openSession();
                 if(lecName.length() > 0) {
-                    SqlSession ss = factory.openSession();
                     lecList = ss.selectList("lec_t.lec_search", lecName);
-                    ss.close();
-
                     lecViewTable(lecList);
                 } else {
-                    //입력을 안한 경우
-                    JOptionPane.showMessageDialog(AdminFrame.this, "강의명을 입력 후 검색버튼을 눌러주세요.");
+                    //입력을 안하고 검색 클릭 시
+                    //JOptionPane.showMessageDialog(AdminFrame.this, "강의명을 입력 후 검색버튼을 눌러주세요.");
+                    lecList = ss.selectList("lec_t.all", lecName); //전체 리스트 출력
+                    lecViewTable(lecList);
                 }
+                ss.close();
             }
         });
 
@@ -222,10 +300,35 @@ public class AdminFrame extends JFrame {
             }
         });
 
+        //종료 클릭 시
+        exit_item.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+
+
+
+        //로그아웃 클릭 시
+        logOut_item.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new Frame1();
+                dispose();
+            }
+        });
+
 
     } //생성자 끝
 
-
+    //박준형0627추가 메서드
+    private void mylec(){
+        SqlSession ss = factory.openSession();
+        lecList = ss.selectList("lec_t.mylec",vo.getAdno());
+        ss.close();
+        lecViewTable(lecList);
+    }
 
     //DB연결하는 함수
     private void init(){
@@ -556,32 +659,6 @@ public class AdminFrame extends JFrame {
     }// </editor-fold>
 
 
-
-
-
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-         */
-        try {
-            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-
-        // 필요한 경우 dummyMember.setId("...") 등 초기화
-        java.awt.EventQueue.invokeLater(() -> new AdminFrame().setVisible(true));
-    }
-
     // Variables declaration - do not modify
     private JButton stdSearch_bt;
     private JButton adSearch_bt;
@@ -693,7 +770,13 @@ public class AdminFrame extends JFrame {
             int cnt = ss.insert("lec_t.insert", lecVO);
             if (cnt > 0) {
                 ss.commit();
-                allClassData(); //강의 테이블 전체조회
+                //박준형0627 추가
+                if(admin==1) {
+                    allClassData(); //강의 테이블 전체조회
+                }else{
+                    mylec();
+                }
+                //박준형0627 추가 끝
                 System.out.println("강의 추가 성공");
             } else {
                 ss.rollback();

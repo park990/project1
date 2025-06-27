@@ -54,4 +54,16 @@ public class EnrolledStudentVO {
     public void setStd_phone(String std_phone) {
         this.std_phone = std_phone;
     }
+
+    @Override
+    public String toString() {
+        return "EnrolledStudentVO{" +
+                "lec_no='" + lec_no + '\'' +
+                ", lec_stdno='" + lec_stdno + '\'' +
+                ", stdno='" + stdno + '\'' +
+                ", lec_name='" + lec_name + '\'' +
+                ", std_name='" + std_name + '\'' +
+                ", std_phone='" + std_phone + '\'' +
+                '}';
+    }
 }

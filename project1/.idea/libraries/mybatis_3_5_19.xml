@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="mybatis-3.5.19">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../util/mybatis-3.5.17/mybatis-3.5.17.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

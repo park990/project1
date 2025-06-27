@@ -1,5 +1,4 @@
 import org.apache.ibatis.session.SqlSession;
-import pm.vo.MemberVO;
 import pm.vo.StudentVO;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -10,7 +9,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.Reader;
-import java.util.List;
 
 //학생 상세 창
 public class StudentInfoDialog extends JDialog {
@@ -31,11 +29,11 @@ public class StudentInfoDialog extends JDialog {
         jPanel1.add(jPanel9, "stdInfo");     // 수강생 정보
         jPanel1.add(jPanel13, "stdModify");     //수강생 수정
 
-        init(); //db연결
         this.setBounds(300,200,380,580);
 
         this.setTitle("학생 상세정보");
 
+        init(); //db연결
 
         //연동되는지 콘솔에 출력
         //System.out.println(stVO.getStd_name());
@@ -49,9 +47,13 @@ public class StudentInfoDialog extends JDialog {
 
         SqlSession ss = factory.openSession();
         StudentVO svoMVO = ss.selectOne("student.get_memID",stVO.getStdno());
-        jTextField3.setText(svoMVO.getMvo().getMem_id()); //회원 ID **********************************
+        jTextField3.setText(svoMVO.getMvo().getMem_id()); //회원 ID
         // result map 활용 재윤**********************************
 
+        //학생정보 db연동하여 출력
+        jTextField1.setText(stVO.getStd_name());
+        jTextField2.setText(stVO.getStdno());
+        //jTextField3.setText(svoMVO.getMvo().getMem_id()); //회원 ID
         jTextField4.setText(stVO.getStd_phone());
         jTextField6.setText(stVO.getStd_address());
         jTextField7.setText(stVO.getStd_email());
@@ -92,7 +94,6 @@ public class StudentInfoDialog extends JDialog {
                 String std_name = jTextField5.getText().trim();
                 String stdno = jTextField8.getText().trim();
                 //String std_name = jTextField5.getText().trim();  //회원 아이디
-
                 String std_phone = jTextField10.getText().trim();
                 String std_address = jTextField11.getText().trim();
                 String std_email = jTextField12.getText().trim();

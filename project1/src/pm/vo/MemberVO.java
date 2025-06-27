@@ -133,4 +133,26 @@ public class MemberVO {
     public void setAdno(String adno) {
         this.adno = adno;
     }
+
+    @Override
+    public String toString() {
+        return "MemberVO{" +
+                "mem_id='" + mem_id + '\'' +
+                ", mem_pw='" + mem_pw + '\'' +
+                ", mem_quit='" + mem_quit + '\'' +
+                ", mem_joindate='" + mem_joindate + '\'' +
+                ", mem_role='" + mem_role + '\'' +
+                ", mem_name='" + mem_name + '\'' +
+                ", mem_gender='" + mem_gender + '\'' +
+                ", mem_phone='" + mem_phone + '\'' +
+                ", mem_birth='" + mem_birth + '\'' +
+                ", mem_bkCode='" + mem_bkCode + '\'' +
+                ", mem_email='" + mem_email + '\'' +
+                ", mem_address='" + mem_address + '\'' +
+                ", mem_admin_inputOrNot='" + mem_admin_inputOrNot + '\'' +
+                ", mem_idx='" + mem_idx + '\'' +
+                ", stdno='" + stdno + '\'' +
+                ", adno='" + adno + '\'' +
+                '}';
+    }
 }

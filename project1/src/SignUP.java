@@ -286,7 +286,7 @@ public class SignUP extends JFrame {
                 String mem_role = adminUser_box.isSelected() ? "A" : "S";
                 //이메일, 주소
                 String mem_email = email_tf.getText().trim();
-                String mem_address = phone1_tf.getText().trim();
+                String mem_address = address_tf.getText().trim();
                 String mem_bkCode = bkCode_tf.getText().trim();
                 //관리자 여부
                 String mem_admin_inputOrNot = "0"; //기본값: 관리자가 아님

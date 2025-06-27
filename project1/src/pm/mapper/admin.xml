@@ -15,10 +15,17 @@
         VALUES (#{std_name}, #{std_address}, #{std_phone}, #{std_email})
     </insert>
 
+    <select id="get_no" resultType="pm.vo.AdminVO" parameterType="String">
+        select a.adno, m.mem_admin_inputOrNot
+        from admin_t a
+        INNER JOIN member_t m
+        ON a.adno = m.adno
+        where a.adno = #{value}
+    </select>
 
     <!--강사 페이지 -->
     <select id="all" resultType="pm.vo.AdminVO" parameterType="Map">
-        SELECT * FROM admin_t
+        SELECT * FROM admin_t a INNER JOIN member_t m ON a.adno = m.adno WHERE mem_quit = 'N'
     </select>
 
     <!--강사 이름으로 검색-->

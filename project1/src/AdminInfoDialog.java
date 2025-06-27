@@ -19,6 +19,7 @@ public class AdminInfoDialog extends JDialog {
         super(parent, modal);
         initComponents(); //화면구성
 
+
         //재윤 init 위로 올렸음 init가 아래 factory설정한것보다 아래 있으니까 factory가 null값이 나옴 그래서 위로 올림
         init(); //DB연동
         //강사 정보 출력
@@ -26,13 +27,18 @@ public class AdminInfoDialog extends JDialog {
         jTextField2.setText(adVO.getAdno());
 
         // 재윤 아이디설정***************************************************************************************
-
         SqlSession ss =factory.openSession();
         String str = adVO.getAdno();
         MemberVO mvo = ss.selectOne("member.adID",str);
-        jTextField3.setText(mvo.getMem_id());  //아이디
+
         // 재윤 아이디설정*****************************************************************************************
 
+
+
+        //강사 정보 출력
+        jTextField1.setText(adVO.getAd_name());
+        jTextField2.setText(adVO.getAdno());
+        jTextField3.setText(mvo.getMem_id());  //아이디
         jTextField4.setText(adVO.getAd_phone());
         jTextField5.setText(adVO.getAd_address());
         jTextField6.setText(adVO.getAd_email());
@@ -66,7 +72,7 @@ public class AdminInfoDialog extends JDialog {
 
                     String ad_name = jTextField1.getText().trim();
                     String adno = jTextField2.getText().trim();
-                    //String ad_id = jTextField3.getText().trim();  //회원ID
+                    //String ad_id = jTextField3.getText().trim();
                     String ad_phone = jTextField4.getText().trim();
                     String ad_address = jTextField5.getText().trim();
                     String ad_email = jTextField6.getText().trim();
@@ -102,7 +108,7 @@ public class AdminInfoDialog extends JDialog {
             }
         });
 
-//        init(); //DB연동
+        init(); //DB연동
 
         this.setBounds(300,200,450,650);
         this.setVisible(true);

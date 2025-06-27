@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="item">
+    <select id="getitem" resultType="pm.vo.test_item_tVO" parameterType="String">
+        SELECT test_item_idx, ques_idx, test_item_num, ques_con
+        FROM test_item_t
+        WHERE ques_idx = #{value}
+    </select>
+
+</mapper>
