@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="test_anw">
+    <insert id="save" parameterType="pm.vo.test_anwVO">
+        INSERT INTO test_anw_t(test_idx, ques_num, c_anw)
+        VALUES(#{test_idx},#{ques_num},#{c_anw});
+    </insert>
+
+    <select id="get_anw" resultType="pm.vo.test_anwVO" parameterType="String">
+        SELECT * FROM test_anw_t
+        WHERE test_idx = #{test_idx}
+    </select>
+
+    <delete id="del_anw" parameterType="pm.vo.test_quesVO">
+        DELETE FROM test_anw_t
+        WHERE test_idx = #{test_idx} AND ques_num=#{ques_num}
+    </delete>
+    <delete id="del_allanw" parameterType="String">
+        DELETE FROM test_anw_t
+        WHERE test_idx = #{test_idx}
+    </delete>
+</mapper>

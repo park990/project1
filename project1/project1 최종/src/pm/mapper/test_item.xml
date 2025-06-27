@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="test_item">
+    <insert id="save" parameterType="pm.vo.test_itemVO">
+        INSERT INTO test_item_t(ques_idx, test_item_num, ques_con)
+        VALUES(#{ques_idx},#{test_item_num},#{ques_con});
+    </insert>
+    <select id="call_items" resultType="pm.vo.test_itemVO" parameterType="String">
+        SELECT * FROM test_item_t
+        WHERE ques_idx = #{ques_idx}
+    </select>
+    <delete id="del_items" parameterType="String">
+        DELETE FROM test_item_t
+        WHERE ques_idx = #{ques_idx}
+    </delete>
+</mapper>

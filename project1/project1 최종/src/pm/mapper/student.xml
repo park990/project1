@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="student">
+    <insert id="insertStd" parameterType="pm.vo.StudentVO"
+            useGeneratedKeys="true" keyProperty="stdno">
+        INSERT INTO std_t (std_name, std_address, std_phone, std_email)
+        VALUES (#{std_name}, #{std_address}, #{std_phone}, #{std_email})
+    </insert>
+
+    <insert id="insertAdmin" parameterType="pm.vo.AdminVO"
+            useGeneratedKeys="true" keyProperty="adno">
+        INSERT INTO admin_t (adno, ad_name, ad_address, ad_phone, ad_email)
+        VALUES (#{adno}, #{ad_name}, #{ad_address}, #{ad_phone}, #{ad_email})
+    </insert>
+
+    <!--강사화면-->
+    <select id="all" resultType="pm.vo.StudentVO" parameterType="Map">
+        SELECT * FROM std_t s INNER JOIN member_t m ON s.stdno = m.stdno WHERE mem_quit = 'N'
+    </select>
+
+    <!--수강생 정보 조회-->
+    <select id="stdInfo" resultType="pm.vo.StudentVO" parameterType="Map">
+        SELECT std.std_name, std.stdno, std.std_phone, std.std_address, std.std_email
+        FROM std_t std
+        WHERE stdno = #{stdno}
+    </select>
+
+    <!--수강생 정보 수정-->
+    <update id="modify" parameterType="pm.vo.StudentVO">
+        UPDATE std_t
+        SET std_name = #{std_name},
+        stdno = #{stdno},
+        std_phone = #{std_phone},
+        std_address = #{std_address},
+        std_email = #{std_email}
+        WHERE stdno = #{stdno}
+    </update>
+
+    <!--학생 이름으로 검색-->
+    <select id="std_search" resultType="pm.vo.StudentVO" parameterType="String">
+        SELECT * FROM std_t
+        WHERE std_name LIKE CONCAT('%', #{std_name}, '%')
+    </select>
+
+    <!--수강이 가능한 학생을 추출-->
+    <select id="availableStudent" resultType="pm.vo.StudentVO" parameterType="Map">
+        SELECT s.stdno, s.std_name, s.std_phone
+        FROM std_t s
+        WHERE s.stdno NOT IN (
+        SELECT stdno
+        FROM lec_std_t
+        WHERE lec_no = #{lec_no}
+        )
+    </select>
+
+    <!--*************************************w재윤*****************************************************************-->
+    <resultMap id="res" type="pm.vo.StudentVO"><!--아래 resultMap이랑 같아야됌--><!--두번쨰 작업-->
+        <association property="mvo" javaType="pm.vo.MemberVO"
+                     select="member.ID" column="stdno">
+
+        </association>          <!--memvo에 1대1로 넣어주고 싶은것이 mvo-->
+
+    </resultMap>
+
+
+    <select id="get_memID" resultMap="res" parameterType="String">
+        SELECT * FROM std_t WHERE stdno = #{str}
+    </select>
+    <!--*************************************w재윤*****************************************************************-->
+
+
+
+</mapper>
