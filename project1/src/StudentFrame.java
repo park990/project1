@@ -39,7 +39,6 @@ public class StudentFrame extends JFrame {
     String col[];
     List<totalDTO> list;
     List<testDTO> test_list;
-    dummyStd dummy;
     stdVO stdvo;
     private JLabel jLabel1;
     private JLabel jLabel10;
