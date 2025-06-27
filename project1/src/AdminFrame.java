@@ -121,6 +121,7 @@ public class AdminFrame extends JFrame {
         adTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+
                 //테이블에서 더블 클릭 했을 때
                 int cnt = e.getClickCount();
                 if(cnt == 2){ //더블 클릭 시
