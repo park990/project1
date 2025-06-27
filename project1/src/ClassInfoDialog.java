@@ -45,8 +45,8 @@ public class ClassInfoDialog extends JDialog {
 
         initComponents(); //화면구성
         init(); //db연결
-
         this.setTitle("강의 상세정보");// 재윤** 이거 initcomponets();보다 위로 가있어서 적용이 안됐음 그래서 아래로 보냄
+
 
 
         //강의정보 db 연동하여 출력
@@ -242,6 +242,7 @@ public class ClassInfoDialog extends JDialog {
                         String t_name = t_nameField.getText().trim();
                         String qnum = qnumField.getText().trim();
 
+//                        StringBuffer sb = new StringBuffer();
                         if (t_name.length() > 0) {
                             System.out.println(t_name);
                         }else{
@@ -257,7 +258,9 @@ public class ClassInfoDialog extends JDialog {
                         if (nd_cnt == 0) {// 모든 칸에 다 입력을 했을 때
                             SqlSession ss= factory.openSession();
                             TestVO tvo = new TestVO();
-                            
+
+
+
                             tvo.setLec_no(cVO.getLec_no());
                             tvo.setTest_name(t_nameField.getText());
                             tvo.setTest_ques_num(qnumField.getText());

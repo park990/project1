@@ -26,7 +26,6 @@ public class AdminInfoDialog extends JDialog {
         jTextField2.setText(adVO.getAdno());
 
         // 재윤 아이디설정***************************************************************************************
-
         SqlSession ss =factory.openSession();
         String str = adVO.getAdno();
         MemberVO mvo = ss.selectOne("member.adID",str);
