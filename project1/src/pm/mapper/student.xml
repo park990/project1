@@ -30,8 +30,7 @@
     <!--수강생 정보 수정-->
     <update id="modify" parameterType="pm.vo.StudentVO">
         UPDATE std_t
-        SET std_name = #{std_name},
-        stdno = #{stdno},
+        SET
         std_phone = #{std_phone},
         std_address = #{std_address},
         std_email = #{std_email}

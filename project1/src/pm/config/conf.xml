@@ -31,5 +31,6 @@
         <mapper resource="pm/mapper/test_t.xml"/>
         <mapper resource="pm/mapper/test_anw2.xml"/>
         <mapper resource="pm/mapper/test_ques2.xml"/>
+        <mapper resource="pm/mapper/result.xml"/>
     </mappers>
 </configuration>

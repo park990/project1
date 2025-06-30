@@ -52,4 +52,8 @@
         ad_email = #{ad_email}
         WHERE adno = #{adno}
     </update>
+    <insert id="insert_rec_adm" parameterType="pm.vo.ClassVO">
+        INSERT INTO lec_adm_t ( adno, ad_name, ad_sdate, lec_no)
+        VALUES( #{adno}, #{ad_name}, #{lec_sdate}, #{lec_no})
+    </insert>
 </mapper>

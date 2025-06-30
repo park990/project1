@@ -32,7 +32,7 @@ public class LoginFrame extends JFrame {
 
     public LoginFrame() throws IOException {
         Cursor hand = new Cursor(Cursor.HAND_CURSOR);
-        this.setTitle("로그인");
+        this.setTitle("로그인  ");
 
         init();
         north_p = new JPanel(new BorderLayout());

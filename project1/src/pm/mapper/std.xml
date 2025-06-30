@@ -28,23 +28,16 @@
         WHERE s.stdno = #{stdno}
     </select>
 
-    <select id="update_mail" resultType="pm.vo.stdVO" parameterType="String">
+    <!-- 학생 정보 수정 시 std_t update -->
+    <update id="update_std_t" parameterType="pm.vo.stdVO">
         UPDATE std_t
-        SET std_email = #{std_email}
+        <set>
+            <if test="std_email != null">std_email = #{std_email},</if>
+            <if test="std_phone != null">std_phone = #{std_phone},</if>
+            <if test="std_address != null">std_address = #{std_address},</if>
+        </set>
         WHERE stdno = #{stdno}
-    </select>
-
-    <select id="update_phone" resultType="pm.vo.stdVO" parameterType="String">
-        UPDATE std_t
-        SET std_phone = #{std_phone}
-        WHERE stdno = #{stdno}
-    </select>
-
-    <select id="update_add" resultType="pm.vo.stdVO" parameterType="String">
-        UPDATE std_t
-        SET std_address = #{std_address}
-        WHERE stdno = #{stdno}
-    </select>
+    </update>
     
     <!-- 시험 응시 여부 -->
     <select id="get_test_auth" resultType="pm.vo.stdVO" parameterType="String">

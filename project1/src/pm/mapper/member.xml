@@ -74,6 +74,17 @@
         SET mem_quit = 'Y'
         WHERE adno = #{adno}
     </update>
+    <!-- =============== 학생카드에서 학생의 정보 수정 시 TABLE UPDATE (윤서) =============== -->
+    <update id="update_mem_t" parameterType="pm.vo.MemberVO">
+        UPDATE member_t
+        <set>
+            <if test="mem_email != null">mem_email = #{mem_email},</if>
+            <if test="mem_phone != null">mem_phone = #{mem_phone},</if>
+            <if test="mem_address != null">mem_address = #{mem_address},</if>
+        </set>
+        WHERE stdno = #{stdno}
+    </update>
+
 </mapper>
 
 
