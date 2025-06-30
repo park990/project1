@@ -95,7 +95,7 @@ public class Dialog extends JFrame {
 
         jTextArea.setText(tqtvo.getQues_con()); //문제내용
         jButton1.setEnabled(current > 0);
-        jLabel8.setText(String.valueOf(tqtvo.getQues_num())+"번"); //문제수
+        jLabel8.setText((tqtvo.getQues_num())+"번"); //문제수
         jTextField7.setText(String.valueOf(tqtvo.getQues_num())); //문제수
 
         int count = Integer.parseInt(tqtvo.getTest_item_tnum()); //문항 수
