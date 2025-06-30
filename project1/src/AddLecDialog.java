@@ -9,6 +9,9 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.Reader;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 
@@ -29,6 +32,29 @@ public class AddLecDialog extends JDialog {
                 String lec_edate = jTextField2.getText().trim();
                 String lec_limit = jTextField3.getText().trim();
                 String lec_info = jTextArea2.getText().trim();
+                //입력하는 날짜 유효성 체크
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+                try {
+                    LocalDate start = LocalDate.parse(lec_sdate, formatter);
+                    LocalDate end = LocalDate.parse(lec_edate, formatter);
+
+                    // 날짜 순서 확인
+                    if (start.isAfter(end)) {
+                        JOptionPane.showMessageDialog(AddLecDialog.this,
+                                "강의 시작일은 종료일보다 빠르거나 같아야 합니다.",
+                                "날짜 순서 오류",
+                                JOptionPane.WARNING_MESSAGE);
+                        return;
+                    }
+
+                } catch (DateTimeParseException ex) {
+                    JOptionPane.showMessageDialog(AddLecDialog.this,
+                            "날짜는 yyyy-MM-dd 형식이며 실제 존재하는 날짜여야 합니다.\n예: 2025-06-24",
+                            "날짜 유효성 오류",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
 
                 //담당 강사 선택 시 강사인덱스를 가져오게 해야한다.
                 AdminVO selectedVO = (AdminVO) jComboBox1.getSelectedItem();
