@@ -43,4 +43,11 @@ public class TestVO {
     public void setTest_name(String test_name) {
         this.test_name = test_name;
     }
+
+
+    /*선영0629*/
+    @Override
+    public String toString() {
+        return test_name + " (" + lec_no + ")";
+    }
 }

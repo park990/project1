@@ -7,7 +7,7 @@
 
     <!--선영수정 -->
     <select id="enrolledStudent" resultType="pm.vo.EnrolledStudentVO" parameterType="Map">
-        SELECT es.lec_no, es.stdno, es.lec_stdno, es.std_name, es.lec_name, s.std_phone
+        SELECT es.lec_no, es.stdno, es.lec_stdno, es.std_name, es.lec_name, s.std_phone, s.std_email
         FROM lec_std_t es INNER JOIN std_t s
         ON es.stdno = s.stdno
         WHERE lec_no = #{lec_no}
@@ -22,6 +22,14 @@
         #{lec_stdno}, #{lec_name}, #{stdno}, #{std_name}, #{lec_no}
         )
     </insert>
+
+    <!--수강중인 수강생 정보 수정-->
+    <update id="modify" parameterType="pm.vo.EnrolledStudentVO">
+        UPDATE lec_std_t
+        SET
+        lec_name = #{lec_name}
+        WHERE lec_no = #{lec_no}
+    </update>
 
     <!--수강중인 학생에 수강생 제외-->
     <delete id = "deleteEnrolledStudent" parameterType="pm.vo.EnrolledStudentVO">

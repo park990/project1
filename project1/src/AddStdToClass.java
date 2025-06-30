@@ -39,7 +39,7 @@ public class AddStdToClass extends JDialog {
         init(); //db연결
 
         esList = parent.enrolledStudent(cVO);
-        //System.out.println("앙: " + estdList.toString());
+        //System.out.println("estdList.toString():3 " + estdList.toString());
         enrolledStudentTable(esList);
         aVailableStd(cVO); //전체학생
 
@@ -89,7 +89,9 @@ public class AddStdToClass extends JDialog {
         });
 
 
-        //제외버튼 클릭 시
+
+
+        /*//제외버튼 클릭 시
         jButton4.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -112,7 +114,7 @@ public class AddStdToClass extends JDialog {
                 selectAvailableStdTable(stdList); //테이블 추출 함수 호출
 
             }
-        });
+        });*/
 
         //확인버튼 클릭 시
         //여러명이 들어갈 수 있기 때문에 arrayList에 담는다.
@@ -187,7 +189,7 @@ public class AddStdToClass extends JDialog {
 
     //수강이 가능한 학생 리스트를 테이블에 표현
     private void selectAvailableStdTable(List<StudentVO> stdList){
-        System.out.println("미미 " + stdList.toString());
+        //System.out.println("미미 " + stdList.toString());
         tableData = new String[stdList.size()][c_name.length];
         int i =0;
         for(StudentVO stVO : stdList){
@@ -239,7 +241,7 @@ public class AddStdToClass extends JDialog {
         jLabel3 = new JLabel();
         jScrollPane2 = new JScrollPane();
         jTable2 = new JTable();
-        jButton4 = new JButton();
+        /*jButton4 = new JButton();*/
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -339,32 +341,29 @@ public class AddStdToClass extends JDialog {
         jTable2.setModel(new DefaultTableModel(tableData, c_name));
         jScrollPane2.setViewportView(jTable2);
 
-        jButton4.setText("제외");
+        /*jButton4.setText("제외");*/
 
-        GroupLayout jPanel6Layout = new GroupLayout(jPanel6);
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
-                jPanel6Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
                                 .addGap(23, 23, 23)
-                                .addGroup(jPanel6Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                        .addComponent(jScrollPane2, GroupLayout.DEFAULT_SIZE, 440, Short.MAX_VALUE)
+                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 440, Short.MAX_VALUE)
                                         .addGroup(jPanel6Layout.createSequentialGroup()
                                                 .addComponent(jLabel3)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(jButton4)))
+                                                .addGap(0, 0, Short.MAX_VALUE)))
                                 .addGap(34, 34, 34))
         );
         jPanel6Layout.setVerticalGroup(
-                jPanel6Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel6Layout.createSequentialGroup()
-                                .addGap(11, 11, 11)
-                                .addGroup(jPanel6Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(jLabel3)
-                                        .addComponent(jButton4))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jScrollPane2, GroupLayout.PREFERRED_SIZE, 166, GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(12, 12, 12)
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         jPanel4.add(jPanel6);
@@ -389,7 +388,7 @@ public class AddStdToClass extends JDialog {
     private JButton jButton1;
     private JButton cancel_bt;
     private JButton jButton3;
-    private JButton jButton4;
+    /*private JButton jButton4;*/
     private JLabel jLabel1;
     private JLabel jLabel2;
     private JLabel jLabel3;

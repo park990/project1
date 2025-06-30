@@ -1,4 +1,5 @@
 import org.apache.ibatis.session.SqlSession;
+import pm.vo.MemberVO;
 import pm.vo.StudentVO;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -9,6 +10,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.Reader;
+import java.lang.reflect.Member;
 
 //학생 상세 창
 public class StudentInfoDialog extends JDialog {
@@ -37,11 +39,6 @@ public class StudentInfoDialog extends JDialog {
 
         //연동되는지 콘솔에 출력
         //System.out.println(stVO.getStd_name());
-
-        //학생정보 db연동하여 출력
-        jTextField1.setText(stVO.getStd_name());
-        jTextField2.setText(stVO.getStdno());
-
 
         // result map 활용 재윤*********************************
 
@@ -91,23 +88,25 @@ public class StudentInfoDialog extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("수강생 데이터 저장!!!");
 
-                String std_name = jTextField5.getText().trim();
                 String stdno = jTextField8.getText().trim();
-                //String std_name = jTextField5.getText().trim();  //회원 아이디
                 String std_phone = jTextField10.getText().trim();
                 String std_address = jTextField11.getText().trim();
                 String std_email = jTextField12.getText().trim();
 
                 StudentVO stdVO = new StudentVO();
-                stdVO.setStd_name(std_name);
                 stdVO.setStdno(stdno);
-                //stdVO.setStd_name(std_name); //회원 아이디
                 stdVO.setStd_phone(std_phone);
                 stdVO.setStd_address(std_address);
                 stdVO.setStd_email(std_email);
 
+                MemberVO mVO = new MemberVO();
+                mVO.setStdno(stdno);
+                mVO.setMem_phone(std_phone);
+                mVO.setMem_address(std_address);
+                mVO.setMem_email(std_email);
+
                 try{
-                    parent.stdUpdateData(stdVO);
+                    parent.stdUpdateData(stdVO, mVO);
                     JOptionPane.showMessageDialog(StudentInfoDialog.this, "수정이 완료되었습니다.");
                 }catch (Exception ex){
                     JOptionPane.showMessageDialog(StudentInfoDialog.this, "수정 중 오류가 발생하였습니다.:\n" + ex.getMessage());

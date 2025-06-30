@@ -62,6 +62,7 @@ public class AddLecDialog extends JDialog {
                     ex.printStackTrace(); //콘솔에 에러 로그 출력
                 }
             }
+
         });
 
         //취소 버튼 클릭 시 강의 추가 창 객체 메모리에서 삭제

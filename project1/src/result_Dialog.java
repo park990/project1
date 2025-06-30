@@ -18,6 +18,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,15 +37,11 @@ public class result_Dialog extends JFrame {
     String grade = null;
     stdVO stdvo;
     MemberVO memberVO;
+    List<result_tVO> result_list = new ArrayList<>();
 
-
-
-
-
-
-    public result_Dialog(testDTO dto, MemberVO membervo) {
+    public result_Dialog(testDTO dto, String stdno) {
         testdto = dto;
-        this.memberVO = membervo;
+        //this.memberVO = membervo;
 
         initComponents();
         init(); //DB 연결
@@ -59,6 +56,8 @@ public class result_Dialog extends JFrame {
             }
         });
         setVisible(true);
+        this.toFront();
+        this.requestFocus();
 
     }
 
@@ -77,7 +76,7 @@ public class result_Dialog extends JFrame {
         try{
             SqlSession ss = factory.openSession();
 
-            stdvo = ss.selectOne("std.get_no", memberVO.getStdno());
+            stdvo = ss.selectOne("std.get_no", testdto.getStdno());
             if(stdvo != null) {
                 jLabel6.setText(stdvo.getStd_name());
             }
@@ -99,9 +98,9 @@ public class result_Dialog extends JFrame {
 
             //고정 테이블 코드==============================================
             int num2 = 1;
-            String[] colName = new String[num+1];
-            String[][] str1=new String[4][num+1];
-            for(int i = 0; i < num+1; i++){
+            String[] colName = new String[11];
+            String[][] str1=new String[4][11];
+            for(int i = 0; i < 11; i++){
                 if(i == 0) {
                     colName[0] = "번호";
                     str1[0][0] = "정답";
@@ -117,14 +116,13 @@ public class result_Dialog extends JFrame {
                         str1[0][i] = test_anw_l.get(num2 - 1).getC_anw();
                         //학생답
                         str1[1][i] = std_anw_l.get(num2 - 1).getS_anw();
-                        num2++;
+
 
                         if (str1[0][i].equals(str1[1][i])) {
                             str1[2][i] = "O";
                             int index = num2 - 1;
-                            if (index >= 0 && index < test_ques_l.size()) {
-                                String pit = str1[3][i] = test_ques_l.get(index).getTest_ques_pit();
-                                //str1[3][i] = pit;
+                            if (index < test_ques_l.size()) {
+                                String pit = str1[3][i] = test_ques_l.get(index).getTest_ques_pit(); //배점
                                 sum += Integer.parseInt(pit);
                             }
                         } else if (!str1[0][i].equals(str1[1][i])) {
@@ -134,8 +132,8 @@ public class result_Dialog extends JFrame {
                             str1[2][i] = "오류";
 
 
-
                     }
+                    num2++;
                 }
             }
             //==============================================================
@@ -158,8 +156,6 @@ public class result_Dialog extends JFrame {
                         else {
                             //columnName 로직 구현 - 번호 구현
                             columnName[i] = String.valueOf(num1) + "번";
-                            //정답
-                            //System.out.println("num1:" + (num1));
                             if ((num1) <= test_anw_l.size() && (num1) <= std_anw_l.size()) {
                                 str[0][i] = test_anw_l.get(num1-1).getC_anw();
                                 //학생답
@@ -173,6 +169,21 @@ public class result_Dialog extends JFrame {
                                         str[3][i] = pit;
                                         sum += Integer.parseInt(pit);
 
+                                        result_tVO result = new result_tVO();
+                                        result.setQues_num(String.valueOf(num));
+                                        result.setTest_idx(testdto.getTest_idx());
+                                        result.setStdno(testdto.getStdno());
+                                        result.setScore(String.valueOf(sum));
+
+                                        try{
+                                            SqlSession s = factory.openSession();
+                                            s.commit();
+                                            s.close();
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
+                                        }
+
+
                                     }
                                 } else if (!str[0][i].equals(str[1][i])) {
                                     str[2][i] = "X";
@@ -185,17 +196,13 @@ public class result_Dialog extends JFrame {
                         }
 
                     }
-                    jTable1.setModel(new DefaultTableModel(str1, colName));
-                    jLabel8.setText(String.valueOf(sum +"/"+grade)); //총점/grade
-
+                    //유동 테이블 불러오기
                     table[q].setModel(new DefaultTableModel(str,columnName));
                     JScrollPane jscrollPane2 = new JScrollPane();
                     jscrollPane2.setViewportView(table[q]);
                     jPanel1.add(jscrollPane2);
 
                 }
-
-
             }
             if(sum >= 90) {
                 grade = "A";
@@ -208,8 +215,31 @@ public class result_Dialog extends JFrame {
                 //UI 이벤트 스레드가 준비되면 알림창 실행
                 SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(null, "보충학습 요망", "보충", JOptionPane.PLAIN_MESSAGE));
             }
+
+            //고정 테이블 불러오기
             jTable1.setModel(new DefaultTableModel(str1, colName));
             jLabel8.setText(String.valueOf(sum +"/"+grade));
+
+
+            result_tVO result = new result_tVO();
+            result.setQues_num(String.valueOf(num));
+            result.setTest_idx(testdto.getTest_idx());
+            result.setStdno(testdto.getStdno());
+            result.setScore(String.valueOf(sum));
+
+            try{
+                SqlSession s = factory.openSession();
+
+                result_tVO exist = s.selectOne("result.re_exist", result);
+
+                if(exist == null) {
+                    s.insert("result.insert_re", result);
+                    s.commit();
+                    s.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
 
 
@@ -379,5 +409,8 @@ public class result_Dialog extends JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
+
+    public void setModal(boolean b) {
+    }
     // End of variables declaration
 }

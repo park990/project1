@@ -34,6 +34,9 @@ public class ClassInfoDialog extends JDialog {
     SqlSessionFactory factory;
     List<EnrolledStudentVO> esList;
     List<TestVO> testList;
+    List<StudentVO> stuList;
+
+    StudentVO stdVO;
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ClassInfoDialog.class.getName());
 
@@ -103,6 +106,7 @@ public class ClassInfoDialog extends JDialog {
                 //String adno = ss.selectOne("admin_t.admin_search", ad_name);
                 AdminVO avo = ss.selectOne("admin.admin_search", ad_name);
                 ss.close();
+
                 //강사번호가 null인 경우, 창띄우기
                 if(avo == null){
                     JOptionPane.showMessageDialog(ClassInfoDialog.this, "담당 강사가 없습니다." + ad_name + " 오류");
@@ -143,10 +147,15 @@ public class ClassInfoDialog extends JDialog {
                 lecVO.setLec_edate(lec_edate); //강의종료일
                 lecVO.setLec_limit(lec_limit); //정원
                 lecVO.setLec_info(lec_info); //강의정보
+                
+                EnrolledStudentVO evo = new EnrolledStudentVO();
+                evo.setLec_no(cVO.getLec_no()); //강의번호
+                evo.setLec_name(lec_name); //강의이름
 
                 try{
-                    parent.lecUpdateData(lecVO);
+                    parent.lecUpdateData(lecVO, evo);
                     JOptionPane.showMessageDialog(ClassInfoDialog.this, "강의 정보 수정이 완료되었습니다.");
+
                 }catch (Exception ex){
                     JOptionPane.showMessageDialog(ClassInfoDialog.this, "수정 중 오류가 발생하였습니다.:\n" + ex.getMessage());
                     ex.printStackTrace(); // 콘솔에 에러 로그 출력 (디버깅용)
@@ -194,6 +203,26 @@ public class ClassInfoDialog extends JDialog {
             }
         });
 
+        //수강생 테이블에 수강생을 더블 클릭했을 때
+        jTable2.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int cnt = e.getClickCount();
+                if(cnt == 2) { //더블 클릭 시
+                    SqlSession ss = factory.openSession();
+
+                    int i = jTable2.getSelectedRow();
+                    System.out.println("i::::" + i);
+                    System.out.println("esList.get(i):::::::: " + esList.get(i));
+                    EnrolledStudentVO esVO = esList.get(i);
+                    System.out.println("esVO::::::::" + esVO.toString());
+                    new StudentInfo(ClassInfoDialog.this, false, esVO);
+
+                    ss.close();
+                }
+            }
+        });
+
         //시험 조회 버튼 클릭 시
         tSelect_bt.addActionListener(new ActionListener() {
             @Override
@@ -226,20 +255,22 @@ public class ClassInfoDialog extends JDialog {
         stdDelete_bt.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                /* 아래 소스로 구현시 오류나서 구현한 함수를 통해 값을 가져와서 삭제되게 하였음*/
-                int i = jTable2.getSelectedRow(); // 이 시점에 행을 가져와야 함!
+
+                int i = jTable2.getSelectedRow();
 
                 EnrolledStudentVO esVO = esList.get(i);
+                //System.out.println("esVO.toString()::::::::::" + esVO.toString());
                 SqlSession ss = factory.openSession();
 
-                ss.delete("lec_std_t.deleteEnrolledStudent", esVO.getStdno());
+                ss.delete("lec_std_t.deleteEnrolledStudent", esVO.getLec_stdno());
                 ss.commit();
-                enrolledStudentTable(esList);
                 ss.close();
+
 
             }
         });
 
+        //시험추가버튼을 눌렀을 때
         tAdd_bt.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -289,10 +320,12 @@ public class ClassInfoDialog extends JDialog {
                             tvo.setTest_name(t_nameField.getText());
                             tvo.setTest_ques_num(qnumField.getText());
 
+
                             int insert_cnt = ss.insert("test_t.save",tvo);
 
                             if(insert_cnt>0){
                                 ss.commit();
+
                             }else {
                                 ss.rollback();
                             }
@@ -322,6 +355,7 @@ public class ClassInfoDialog extends JDialog {
                 //시험 받기
                 TestVO tvo = testList.get(i);
                 SqlSession ss = factory.openSession();
+
                 //해당 시험에 대한 답안 다 지우기
                 int anw_del_cnt = ss.delete("test_anw.del_allanw",tvo.getTest_idx());
                 //해당 시험에 대한 문항 다 지우기

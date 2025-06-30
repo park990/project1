@@ -68,20 +68,27 @@ public class ModifyDialog extends JFrame {
     }//생성자의 끝
     //UPDATE 함수
     private void update() throws IOException {
+        //ModifyDialog.java
+//update() method 수정
+
         Reader r = Resources.getResourceAsReader("pm/config/conf.xml");
 
         SqlSessionFactory factory = new SqlSessionFactoryBuilder().build(r);
         SqlSession ss = factory.openSession();
-        vo.setStd_email(mail_tf.getText());
-        ss.update("std.update_mail", vo);
-        ss.commit();
 
-        vo.setStd_phone(phone_tf.getText());
-        ss.update("std.update_phone",vo);
-        ss.commit();
 
+        //============== std_t 의 정보들 먼저 변경 =====================
         vo.setStd_address(add_tf.getText());
-        ss.update("std.update_add",vo);
+        vo.setStd_email(mail_tf.getText());
+        vo.setStd_phone(phone_tf.getText());
+        ss.update("std.update_std_t",vo);
+        ss.commit();
+
+        //=========== member_t 의 정보들도 변경해줘야됨 ==================
+        parent.vo.setMem_address(add_tf.getText());
+        parent.vo.setMem_email(mail_tf.getText());
+        parent.vo.setMem_phone(phone_tf.getText());
+        ss.update("member.update_mem_t",parent.vo);
         ss.commit();
 
         if(vo != null) {

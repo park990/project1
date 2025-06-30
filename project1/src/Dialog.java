@@ -11,9 +11,11 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,6 +33,10 @@ public class Dialog extends JFrame {
     private test_item_tVO tit;
     ButtonGroup bg = new ButtonGroup();
     StudentFrame studentFrame;
+    private  List<std_anw_tVO> anwlist = new ArrayList<>();
+
+
+
     public Dialog(testDTO dto, StudentFrame studentFrame) {
         this.studentFrame = studentFrame;
         this.dto=dto;
@@ -63,13 +69,13 @@ public class Dialog extends JFrame {
                 test_ques_tVO firstQ = quesList.get(0); //첫문제 배점
                 jTextField5.setText(String.valueOf(firstQ.getTest_ques_pit()));
 
-                update_q(quesList.get(current));
-
                 //문제번호
                 t_vo = ss.selectOne("test.getT", dto.getTest_idx());
                 int num = Integer.parseInt(t_vo.getTest_ques_num());
                 jTextField4.setText(String.valueOf(num));
                 jTextField6.setText(String.valueOf(num));
+
+                update_q(quesList.get(current));
 
 
             } else {
@@ -87,7 +93,7 @@ public class Dialog extends JFrame {
     public void update_q(test_ques_tVO tqtvo) {//문제 업데이트
         System.out.println("Ques_idx: " + tqtvo.getQues_idx());
 
-        jLabel9.setText(tqtvo.getQues_con()); //문제내용
+        jTextArea.setText(tqtvo.getQues_con()); //문제내용
         jButton1.setEnabled(current > 0);
         jLabel8.setText(String.valueOf(tqtvo.getQues_num())+"번"); //문제수
         jTextField7.setText(String.valueOf(tqtvo.getQues_num())); //문제수
@@ -137,6 +143,28 @@ public class Dialog extends JFrame {
                 }
 
             }
+            //전의 번호들 중 지금 번호와 같은 게 있다면 전의 답에서 눌려졌던 jRadioButton 활성화
+            for (std_anw_tVO before_num : anwlist) {
+                if(before_num.getQues_num().equals(tqtvo.getQues_num())) {
+                    String saveAnw = before_num.getS_anw();
+                    if(jRadioButton6.getText().equals(saveAnw)) {
+                        jRadioButton6.setSelected(true);
+                    }
+                    else if (jRadioButton7.getText().equals(saveAnw)) {
+                        jRadioButton7.setSelected(true);
+                    }
+                    else if (jRadioButton8.getText().equals(saveAnw)) {
+                        jRadioButton8.setSelected(true);
+                    }
+                    else if (jRadioButton1.getText().equals(saveAnw)) {
+                        jRadioButton1.setSelected(true);
+                    }
+                    else if (jRadioButton2.getText().equals(saveAnw)) {
+                        jRadioButton2.setSelected(true);
+                    }
+                    break;
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -178,14 +206,17 @@ public class Dialog extends JFrame {
                     anwvo.setStdno(dto.getStdno());
                     anwvo.setS_anw(anw);
 
-                    try{
-                        SqlSession ss = factory.openSession();
-                        ss.insert("std_anw.anw", anwvo);
-                        ss.commit();
-                        ss.close();
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }                }
+                    //답 중복방지
+                    //anwvo에 저장하기 전, 같은 문제 번호를 가진 답이 있다면 그 답안 지움
+                    for(int i = 0; i < anwlist.size(); i++) {
+                        std_anw_tVO before_anw = anwlist.get(i);
+                        if(before_anw.getQues_num().equals(anwvo.getQues_num())) {
+                            anwlist.remove(i);
+                            break;
+                        }
+                    }
+                    anwlist.add(anwvo);
+                }
 
                 //시험 번호가 전체 문제수보다 작을 때
                 if(current < quesList.size() -1) {
@@ -195,20 +226,25 @@ public class Dialog extends JFrame {
                 else if (current == quesList.size() -1 ){
                     int result = JOptionPane.showConfirmDialog(null, "마지막 문제입니다. 제출하시겠습니까?", "확인", JOptionPane.YES_NO_OPTION);
 
-
+                    //예 버튼을 누르면 DB에 저장
                     if(result == JOptionPane.YES_OPTION) {
                         System.out.println("제출되었습니다.");
+                        SqlSession ss = factory.openSession();
+                        for(std_anw_tVO std_anw : anwlist) {
+                            ss.insert("std_anw.anw", std_anw);
+                        }
+                        ss.commit();
+                        ss.close();
                         try {
                             studentFrame.search2();
                         } catch (IOException ex) {
-                            throw new RuntimeException(ex);
+                            ex.printStackTrace();
                         }
                         dispose();
                     }
                     else{
                         return;
                     }
-
                 }
                 bg.clearSelection();
             }
@@ -271,9 +307,12 @@ public class Dialog extends JFrame {
         jTextField6 = new JTextField();
         jPanel5 = new JPanel();
         jPanel7 = new JPanel();
-        jLabel9 = new JLabel();
+        jTextArea = new JTextArea();
+        jTextArea.setLineWrap(true);
+        jTextArea.setWrapStyleWord(true);
+        jTextArea.setEditable(false);
         jLabel8 = new JLabel();
-        jLabel9 = new JLabel();
+        //jextFiled = new JLabel();
 
         jPanel8 = new JPanel();
         jRadioButton6 = new JRadioButton();
@@ -410,7 +449,8 @@ public class Dialog extends JFrame {
 
         jPanel5.setLayout(new java.awt.GridLayout(2, 0));
 
-        jLabel9.setText("문제");
+        jTextArea.setText("문제");
+
 
         jLabel8.setText("jLabel8");
 
@@ -422,7 +462,7 @@ public class Dialog extends JFrame {
                                 .addGap(41, 41, 41)
                                 .addGroup(jPanel7Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                         .addComponent(jLabel8)
-                                        .addComponent(jLabel9, GroupLayout.PREFERRED_SIZE, 368, GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(jTextArea, GroupLayout.PREFERRED_SIZE, 368, GroupLayout.PREFERRED_SIZE))
                                 .addContainerGap(71, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
@@ -431,7 +471,7 @@ public class Dialog extends JFrame {
                                 .addGap(23, 23, 23)
                                 .addComponent(jLabel8)
                                 .addGap(18, 18, 18)
-                                .addComponent(jLabel9, GroupLayout.PREFERRED_SIZE, 159, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jTextArea, GroupLayout.PREFERRED_SIZE, 159, GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap(20, Short.MAX_VALUE))
         );
 
@@ -629,7 +669,7 @@ public class Dialog extends JFrame {
     private JLabel jLabel6;
     private JLabel jLabel7;
     private JLabel jLabel8;
-    private JLabel jLabel9;
+    private JTextArea jTextArea;
 
     private JPanel jPanel1;
     private JPanel jPanel2;

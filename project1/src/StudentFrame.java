@@ -39,6 +39,7 @@ public class StudentFrame extends JFrame {
     String col[];
     List<totalDTO> list;
     List<testDTO> test_list;
+
     stdVO stdvo;
     private JLabel jLabel1;
     private JLabel jLabel10;
@@ -247,7 +248,7 @@ public class StudentFrame extends JFrame {
                         int i = jTable2.getSelectedRow();
                         //setTitle(String.valueOf(i));
                         testDTO dto = test_list.get(i);
-                        new result_Dialog(dto, vo);
+                        new result_Dialog(dto, stdvo.getStdno());
 
                         //
                     }
@@ -613,7 +614,7 @@ public class StudentFrame extends JFrame {
         jPanel2.setLayout(new GridLayout(2, 2));
 
         //title 로고 ==============================================
-        ImageIcon originalIcon = new ImageIcon(getClass().getResource("/images/image.png"));
+        ImageIcon originalIcon = new ImageIcon(getClass().getResource("/images/logo.png"));
         Image scaledImage = originalIcon.getImage().getScaledInstance(52, 47, Image.SCALE_SMOOTH);
         lb_t2.setIcon(new ImageIcon(scaledImage));
 
@@ -654,7 +655,7 @@ public class StudentFrame extends JFrame {
         );
 
         JLabel birth_lb = new JLabel("생년월일 :");
-        birth_lb.setFont(new Font("맑은 고딕", Font.BOLD, 14));
+        birth_lb.setFont(new Font("맑은 고딕", Font.BOLD, 13));
 
         jLabel3.setText("mail :");
         jLabel3.setFont(new Font("맑은 고딕", Font.BOLD, 14));

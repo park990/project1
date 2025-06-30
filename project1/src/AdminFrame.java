@@ -1,8 +1,5 @@
 //import ClassInfoDialog;
-import pm.vo.AdminVO;
-import pm.vo.ClassVO;
-import pm.vo.MemberVO;
-import pm.vo.StudentVO;
+import pm.vo.*;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -12,6 +9,7 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 import java.io.Reader;
@@ -35,9 +33,11 @@ public class AdminFrame extends JFrame {
     List<ClassVO> lecList; //강의
 
     AdminVO adminVO;
+    MemberVO vo;
+
 
     Reader r;
-    MemberVO vo;
+
 
     JMenuBar bar;
     JMenu file_M;
@@ -56,6 +56,9 @@ public class AdminFrame extends JFrame {
         factory = new SqlSessionFactoryBuilder().build(r);
 
         initComponents(); //화면구성
+
+        //회원ID + 환영 글자 출력 선영0628
+        jLabelWelcome.setText(vo.getMem_id() + "님 환영합니다.");
 
         //메뉴작업
         bar = new JMenuBar();
@@ -136,14 +139,13 @@ public class AdminFrame extends JFrame {
                     mylec();
                 }else{
                     allClassData();
-
                 }
             }
         });
         //박준형추가부분 끝
         SqlSession ss = factory.openSession();
         adminVO = ss.selectOne("admin.get_no", vo.getAdno());
-        System.out.println("어드민::::::::" + adminVO.toString());
+        //System.out.println("어드민::::::::" + adminVO.toString());
 
         //일반강사(회원가입 시 admin을 입력하지 않은 강사)일 경우에 수강생탭, 강사탭 비활성화 선영수정
 //        if(adminVO != null && !adminVO.getMem_admin_inputOrNot().equals("1")){
@@ -153,7 +155,7 @@ public class AdminFrame extends JFrame {
 //            allClassData();
 //        }
 
-        allStudentData();
+        //allStudentData();
 
         //이벤트 감지자 등록
         this.addWindowListener(new WindowAdapter() {
@@ -174,6 +176,7 @@ public class AdminFrame extends JFrame {
                     allAdminData();
                 } else if (index == 2) { //강의명 탭 클릭 시
                     allClassData();
+
                 }
             }
         });
@@ -249,7 +252,7 @@ public class AdminFrame extends JFrame {
         });
 
 
-        //강사 관리 탭 - 검색 버튼 클릭 시 
+        //강사 관리 탭 - 검색 버튼 클릭 시
         adSearch_bt.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -271,21 +274,32 @@ public class AdminFrame extends JFrame {
             }
         });
 
-        //강의관리 탭 - 검색 버튼 클릭 시
+        //강의관리 탭 - 검색 버튼 클릭 시 선영0628
         lecSearch_bt.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //사용자가 입력한 값 추출
                 String lecName = jTextField3.getText().trim();
                 SqlSession ss = factory.openSession();
-                if(lecName.length() > 0) {
-                    lecList = ss.selectList("lec_t.lec_search", lecName);
-                    lecViewTable(lecList);
-                } else {
-                    //입력을 안하고 검색 클릭 시
-                    //JOptionPane.showMessageDialog(AdminFrame.this, "강의명을 입력 후 검색버튼을 눌러주세요.");
-                    lecList = ss.selectList("lec_t.all", lecName); //전체 리스트 출력
-                    lecViewTable(lecList);
+                if (vo.getMem_admin_inputOrNot().equals(1)){ //총괄 강사가 서치하는 경우
+                    if (lecName.length() > 0) {
+                        lecList = ss.selectList("lec_t.lec_search", lecName);
+                        lecViewTable(lecList);
+                    } else {
+                        //입력을 안하고 검색 클릭 시
+                        //JOptionPane.showMessageDialog(AdminFrame.this, "강의명을 입력 후 검색버튼을 눌러주세요.");
+                        lecList = ss.selectList("lec_t.all", lecName); //전체 리스트 출력
+                        lecViewTable(lecList);
+                    }
+                } else{ //일반 강사가 서치하는 경우
+                    if (lecName.length() > 0) {
+                        lecList = ss.selectList("lec_t.myLec_search", lecName);
+                        lecViewTable(lecList);
+                    } else {
+                        //입력을 안하고 검색 클릭 시
+                        mylec(); //자신의 강의 전체를 출력
+                    }
+
                 }
                 ss.close();
             }
@@ -307,8 +321,6 @@ public class AdminFrame extends JFrame {
             }
         });
 
-
-
         //로그아웃 클릭 시
         logOut_item.addActionListener(new ActionListener() {
             @Override
@@ -318,7 +330,7 @@ public class AdminFrame extends JFrame {
             }
         });
 
-
+        ss.close();
     } //생성자 끝
 
     //박준형0627추가 메서드
@@ -442,6 +454,111 @@ public class AdminFrame extends JFrame {
     }
 
 
+    //수강생 관리 데이터 업데이트
+    public void stdUpdateData(StudentVO stdVO, MemberVO vo) {
+        SqlSession ss = factory.openSession();
+
+        int cnt = ss.update("student.modify", stdVO);
+
+        if(cnt > 0) { //실행을 해서 결과가 있는 경우
+            ss.update("member.update_mem_t" ,vo);
+            ss.commit();
+
+            //JTable값을 갱신한다. 사용자가 JTable에서 더블클릭한
+            // 행번호(index)를 알아야 한다.
+            stdTable.setValueAt(stdVO.getStd_phone(),i,2);//연락처
+            stdTable.setValueAt(stdVO.getStd_email(),i,3);//e-mail
+            //멤버변수 stuList의 내용도 변경
+            stuList.set(i,stdVO);
+
+        } else  {
+            ss.rollback();
+        }
+        ss.close();
+    }
+
+    //강사 관리 데이터 업데이트
+    public void adUpdateData(AdminVO adVO) {
+        SqlSession ss = factory.openSession();
+
+        int cnt = ss.update("admin.modify", adVO);
+        if(cnt > 0) {
+            ss.commit();
+
+            //JTable값을 갱신한다. 사용자가 JTable에서 더블클릭한
+            // 행번호(index)를 알아야 한다.
+            adTable.setValueAt(adVO.getAdno(),i,0);//강의명
+            adTable.setValueAt(adVO.getAd_name(),i,1);//강사명
+            adTable.setValueAt(adVO.getAd_phone(),i,2);//연락처
+            adTable.setValueAt(adVO.getAd_email(),i,3);//e-mail
+
+            //멤버변수 lecList의 내용도 변경
+            adList.set(i,adVO);
+
+        } else  {
+            ss.rollback();
+        }
+        ss.close();
+    }
+
+    //강의 관리 데이터 업데이트
+    public void lecUpdateData(ClassVO cVO, EnrolledStudentVO enVO) {
+        SqlSession ss = factory.openSession();
+
+        int cnt = ss.update("lec_t.modify", cVO);
+        if(cnt > 0) {
+            ss.update("lec_std_t.modify", enVO);
+            ss.commit();
+
+            //JTable값을 갱신한다. 사용자가 JTable에서 더블클릭한
+            // 행번호(index)를 알아야 한다.
+            lecTable.setValueAt(cVO.getLec_name(),i,0);//강의명
+            lecTable.setValueAt(cVO.getAd_name(),i,1);//강사명
+            lecTable.setValueAt(cVO.updatePeriod(),i,2);//강의기간
+            lecTable.setValueAt(cVO.getLec_limit(),i,3);//정원
+
+            //멤버변수 lecList의 내용도 변경
+            lecList.set(i,cVO);
+
+        } else  {
+            ss.rollback();
+        }
+        ss.close();
+    }
+
+    //강의 추가
+    public void lecInsertData(ClassVO lecVO){
+        SqlSession ss = factory.openSession();
+        try {
+            int cnt = ss.insert("lec_t.insert", lecVO);
+            if (cnt > 0) {
+                ss.commit();
+                //박준형0627 추가
+                if(admin==1) {
+                    allClassData(); //강의 테이블 전체조회
+                }else{
+                    mylec();
+
+                }
+                //박준형0627 추가 끝
+                System.out.println("강의 추가 성공");
+                int ad_insert_cnt = ss.insert("admin.insert_rec_adm",lecVO);
+                if(ad_insert_cnt>0){
+                    ss.commit();
+                }else{
+                    ss.rollback();
+                }
+            } else {
+                ss.rollback();
+                System.out.println("강의 추가 실패");
+            }
+        } catch (Exception e) {
+            ss.rollback();
+            e.printStackTrace();
+        } finally {
+            ss.close();
+        }
+    }
 
     private void initComponents() {
 
@@ -476,26 +593,36 @@ public class AdminFrame extends JFrame {
         jScrollPane2 = new JScrollPane();
         lecTable = new JTable();
 
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        //--------------로고 이미지 추가 및 회원ID + 환영 글자 출력 선영0629
 
-        jLabel1.setText("관리자 페이지");
+        //로고 이미지 추가
+        ImageIcon icon = new ImageIcon(getClass().getResource("/images/img.png"));
+        Image img = icon.getImage();
+        Image resized = img.getScaledInstance(130, 130, Image.SCALE_SMOOTH);
+        ImageIcon resizedIcon = new ImageIcon(resized);
 
-        GroupLayout jPanel9Layout = new GroupLayout(jPanel9);
-        jPanel9.setLayout(jPanel9Layout);
-        jPanel9Layout.setHorizontalGroup(
-                jPanel9Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
-                                .addContainerGap(41, Short.MAX_VALUE)
-                                .addComponent(jLabel1)
-                                .addGap(39, 39, 39))
-        );
-        jPanel9Layout.setVerticalGroup(
-                jPanel9Layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
-                                .addContainerGap(45, Short.MAX_VALUE)
-                                .addComponent(jLabel1)
-                                .addGap(38, 38, 38))
-        );
+        // 라벨 분리: 로고, 제목, 환영 메시지
+        JLabel jLabelLogo = new JLabel(resizedIcon); // 로고만
+        JLabel jLabelTitle = new JLabel("관리자 페이지");
+        jLabelTitle.setFont(new Font("맑은 고딕", Font.BOLD, 16));
+
+        jLabelWelcome = new JLabel("***님 환영합니다.");
+        jLabelWelcome.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
+
+        // 관리자페이지 글씨, 환영 메시지를 수직으로 정렬
+        JPanel textPanel = new JPanel();
+        textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS));
+        textPanel.setOpaque(false); // 투명 배경
+        textPanel.add(jLabelTitle);
+        textPanel.add(Box.createVerticalStrut(5));
+        textPanel.add(jLabelWelcome);
+
+        // 로고 + 텍스트를 나란히 정렬하는 메인 헤더 패널
+        jPanel9.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 15)); // 좌측 정렬
+        jPanel9.add(jLabelLogo);
+        jPanel9.add(textPanel);
+
+        //---------------------------------------------------------------------------------
 
         jPanel1.add(jPanel9);
 
@@ -670,7 +797,7 @@ public class AdminFrame extends JFrame {
     private JLabel jLabel3;
     private JLabel jLabel4;
     private JLabel jLabel6;
-
+    private JLabel jLabelWelcome; //로그인 한 사람을 표시해주는 라벨
     private JPanel jPanel1;
     private JPanel jPanel10;
     private JPanel jPanel11;
@@ -691,102 +818,5 @@ public class AdminFrame extends JFrame {
     private JTextField jTextField2;
     private JTextField jTextField3;
     // End of variables declaration
-
-
-    //수강생 관리 데이터 업데이트
-    public void stdUpdateData(StudentVO stdVO) {
-        SqlSession ss = factory.openSession();
-
-        int cnt = ss.update("student.modify", stdVO);
-        if(cnt > 0) {
-            ss.commit();
-
-            //JTable값을 갱신한다. 사용자가 JTable에서 더블클릭한
-            // 행번호(index)를 알아야 한다.
-            stdTable.setValueAt(stdVO.getStd_phone(),i,2);//연락처
-            stdTable.setValueAt(stdVO.getStd_email(),i,3);//e-mail
-            //멤버변수 stuList의 내용도 변경
-            stuList.set(i,stdVO);
-
-        } else  {
-            ss.rollback();
-        }
-        ss.close();
-    }
-
-    //강사 관리 데이터 업데이트
-    public void adUpdateData(AdminVO adVO) {
-        SqlSession ss = factory.openSession();
-
-        int cnt = ss.update("admin.modify", adVO);
-        if(cnt > 0) {
-            ss.commit();
-
-            //JTable값을 갱신한다. 사용자가 JTable에서 더블클릭한
-            // 행번호(index)를 알아야 한다.
-            adTable.setValueAt(adVO.getAdno(),i,0);//강의명
-            adTable.setValueAt(adVO.getAd_name(),i,1);//강사명
-            adTable.setValueAt(adVO.getAd_phone(),i,2);//연락처
-            adTable.setValueAt(adVO.getAd_email(),i,3);//e-mail
-
-            //멤버변수 lecList의 내용도 변경
-            adList.set(i,adVO);
-
-        } else  {
-            ss.rollback();
-        }
-        ss.close();
-    }
-
-    //강의 관리 데이터 업데이트
-    public void lecUpdateData(ClassVO cVO) {
-        SqlSession ss = factory.openSession();
-
-        int cnt = ss.update("lec_t.modify", cVO);
-        if(cnt > 0) {
-            ss.commit();
-
-            //JTable값을 갱신한다. 사용자가 JTable에서 더블클릭한
-            // 행번호(index)를 알아야 한다.
-            lecTable.setValueAt(cVO.getLec_name(),i,0);//강의명
-            lecTable.setValueAt(cVO.getAd_name(),i,1);//강사명
-            lecTable.setValueAt(cVO.updatePeriod(),i,2);//강의기간
-            lecTable.setValueAt(cVO.getLec_limit(),i,3);//정원
-
-            //멤버변수 lecList의 내용도 변경
-            lecList.set(i,cVO);
-
-        } else  {
-            ss.rollback();
-        }
-        ss.close();
-    }
-
-    //강의 추가
-    public void lecInsertData(ClassVO lecVO){
-        SqlSession ss = factory.openSession();
-        try {
-            int cnt = ss.insert("lec_t.insert", lecVO);
-            if (cnt > 0) {
-                ss.commit();
-                //박준형0627 추가
-                if(admin==1) {
-                    allClassData(); //강의 테이블 전체조회
-                }else{
-                    mylec();
-                }
-                //박준형0627 추가 끝
-                System.out.println("강의 추가 성공");
-            } else {
-                ss.rollback();
-                System.out.println("강의 추가 실패");
-            }
-        } catch (Exception e) {
-            ss.rollback();
-            e.printStackTrace();
-        } finally {
-            ss.close();
-        }
-    }
 
 }

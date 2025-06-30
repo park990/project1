@@ -53,4 +53,16 @@ public class testDTO {
         this.test_name = test_name;
     }
 
+
+    @Override
+    public String toString() {
+        return "testDTO{" +
+                "lec_name='" + lec_name + '\'' +
+                ", ad_name='" + ad_name + '\'' +
+                ", lec_no='" + lec_no + '\'' +
+                ", test_name='" + test_name + '\'' +
+                ", test_idx='" + test_idx + '\'' +
+                ", stdno='" + stdno + '\'' +
+                '}';
+    }
 }

@@ -42,16 +42,26 @@
     </update>
 
     <!--강의 추가-->
-    <insert id="insert" parameterType="pm.vo.ClassVO">
+    <insert id="insert" parameterType="pm.vo.ClassVO" useGeneratedKeys="true" keyProperty="lec_no">
         INSERT INTO lec_t (
         lec_no, lec_name, adno, lec_sdate, lec_edate, lec_limit, lec_info
         ) VALUES (
         #{lec_no}, #{lec_name}, #{adno}, #{lec_sdate}, #{lec_edate}, #{lec_limit}, #{lec_info}
         )
     </insert>
+
     <select id="mylec" parameterType="String"  resultType="pm.vo.ClassVO">
         SELECT * FROM lec_t l INNER JOIN admin_t a ON l.adno = a.adno
         WHERE a.adno = #{adno}
+    </select>
+
+    <!--일반강사 강의 이름으로 검색 선영0628-->
+    <select id="myLec_search" resultType="pm.vo.ClassVO" parameterType="String">
+        SELECT l.lec_name, a.ad_name, l.lec_sdate, l.lec_edate, l.lec_limit
+        FROM lec_t l INNER JOIN admin_t a
+        ON l.adno = a.adno
+        WHERE a.adno = #{adno}
+        AND lec_name LIKE CONCAT('%', #{lec_name}, '%')
     </select>
 
 </mapper>
