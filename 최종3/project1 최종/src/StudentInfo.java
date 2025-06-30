@@ -1,0 +1,466 @@
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import pm.vo.*;
+
+import javax.swing.*;
+import java.awt.Dialog;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.Reader;
+import java.util.List;
+
+public class StudentInfo extends JDialog {
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(StudentInfo.class.getName());
+
+    SqlSessionFactory factory;
+
+    /**
+     * Creates new form StudentInfo
+     */
+    public StudentInfo(Dialog parent, boolean modal, EnrolledStudentVO esVO) {
+        super(parent, modal);
+        initComponents(); //화면구성
+
+        init(); //db연결
+
+        jLabel8.setText(esVO.getStd_name());
+        jLabel9.setText(esVO.getStdno());
+        jLabel10.setText(esVO.getStd_phone());
+        jLabel11.setText(esVO.getStd_email());
+        jLabel12.setText(esVO.getLec_name());
+
+        // 시험 콤보박스 채우기
+        SqlSession ss = factory.openSession();
+        List<TestVO> testList = ss.selectList("test_t.selectTest", esVO.getLec_no());
+        //System.out.println(testList.toString());
+
+        //jComboBox1.removeAllItems();
+        if (testList != null && !testList.isEmpty()) { //테스트 목록이 null이 아니거나 비어있지 않을때
+            for (TestVO vo : testList) {
+                jComboBox1.addItem(vo); // 시험명 출력
+            }
+        } else { //시험 목록이 없다면
+            jComboBox1.addItem(null);
+        }
+
+
+        //콤보박스 시험목록 선택 시
+        jComboBox1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                TestVO selectedTestVO = (TestVO) jComboBox1.getSelectedItem();
+                if (selectedTestVO == null) return;
+
+                String test_idx = selectedTestVO.getTest_idx();
+                String testName = selectedTestVO.getTest_name();
+
+                result_tVO rtVO = new result_tVO();
+                rtVO.setStdno(esVO.getStdno());
+                rtVO.setLec_no(esVO.getLec_no());
+                rtVO.setStd_name(esVO.getStd_name());
+                rtVO.setTest_name(testName);
+                rtVO.setTest_idx(test_idx);
+
+                SqlSession session = factory.openSession();
+                result_tVO rtVO1 = session.selectOne("result.selectTestScore", rtVO);
+                session.close();
+
+                if (rtVO1 != null) {
+                    jLabel14.setText(rtVO1.getScore());
+                    jButton2.setEnabled(true);
+
+                    // 기존 액션리스너 제거 후 새로 추가
+                    for (ActionListener al : jButton2.getActionListeners()) {
+                        jButton2.removeActionListener(al);
+                    }
+
+                    jButton2.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            testDTO dto = new testDTO();
+                            dto.setStdno(esVO.getStdno());
+                            dto.setTest_idx(test_idx);
+                            dto.setTest_name(testName);
+                            dto.setLec_no(esVO.getLec_no());
+                            dto.setLec_name(esVO.getLec_name());
+
+                            result_Dialog dialog = new result_Dialog(dto, esVO.getStdno());
+                            dialog.setVisible(true);
+                        }
+                    });
+
+                } else {
+                    jLabel14.setText("미응시");
+                    jButton2.setEnabled(false);
+                }
+            }
+        });
+        // 창 뜨기 전에 초기값으로 라벨(jLabel14, 점수)도 세팅해두기
+        // 리스너 강제 호출
+        jComboBox1.setSelectedIndex(0);
+
+        jButton2.setText("정오표");
+
+        //닫기 버튼 클릭 시 창 객체 삭제
+        jButton1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+            }
+        });
+
+        //X클릭 시 창 메모리상에서 제거
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                dispose();
+            }
+        });
+
+        this.setBounds(300,150,400,550);
+        this.setVisible(true); //창 띄우기
+    }//생성자 끝
+
+    private void init(){
+        try{
+            Reader r = Resources.getResourceAsReader("pm/config/conf.xml");
+            factory = new SqlSessionFactoryBuilder().build(r);
+            r.close();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">
+    private void initComponents() {
+
+        jPanel1 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
+        jPanel4 = new javax.swing.JPanel();
+        jPanel5 = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jPanel6 = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jPanel7 = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jPanel8 = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jPanel9 = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        jPanel10 = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
+        jComboBox1 = new javax.swing.JComboBox<TestVO>();
+        jPanel11 = new javax.swing.JPanel();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        jButton2 = new javax.swing.JButton();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        jPanel1.setLayout(new java.awt.BorderLayout());
+
+        jLabel1.setFont(new java.awt.Font("맑은 고딕", 1, 18)); // NOI18N
+        jLabel1.setText("수강생 정보");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(144, 144, 144)
+                                .addComponent(jLabel1)
+                                .addContainerGap(146, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+                jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(30, 30, 30)
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(30, Short.MAX_VALUE))
+        );
+
+        jPanel1.add(jPanel2, java.awt.BorderLayout.PAGE_START);
+
+        jButton1.setText("닫기");
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+                jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                                .addContainerGap(287, Short.MAX_VALUE)
+                                .addComponent(jButton1)
+                                .addGap(29, 29, 29))
+        );
+        jPanel3Layout.setVerticalGroup(
+                jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                                .addContainerGap(57, Short.MAX_VALUE)
+                                .addComponent(jButton1)
+                                .addGap(20, 20, 20))
+        );
+
+        jPanel1.add(jPanel3, java.awt.BorderLayout.PAGE_END);
+
+        jPanel4.setLayout(new java.awt.GridLayout(7, 2));
+
+        jLabel2.setText("이름: ");
+
+        jLabel8.setText("jLabel8");
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+                jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addGap(26, 26, 26)
+                                .addComponent(jLabel2)
+                                .addGap(53, 53, 53)
+                                .addComponent(jLabel8)
+                                .addContainerGap(241, Short.MAX_VALUE))
+        );
+        jPanel5Layout.setVerticalGroup(
+                jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                                .addContainerGap(9, Short.MAX_VALUE)
+                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel2)
+                                        .addComponent(jLabel8))
+                                .addGap(14, 14, 14))
+        );
+
+        jPanel4.add(jPanel5);
+
+        jLabel3.setText("학번: ");
+
+        jLabel9.setText("jLabel9");
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+                jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel6Layout.createSequentialGroup()
+                                .addGap(26, 26, 26)
+                                .addComponent(jLabel3)
+                                .addGap(52, 52, 52)
+                                .addComponent(jLabel9)
+                                .addContainerGap(242, Short.MAX_VALUE))
+        );
+        jPanel6Layout.setVerticalGroup(
+                jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                                .addContainerGap(9, Short.MAX_VALUE)
+                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel3)
+                                        .addComponent(jLabel9))
+                                .addGap(14, 14, 14))
+        );
+
+        jPanel4.add(jPanel6);
+
+        jLabel4.setText("전화번호: ");
+
+        jLabel10.setText("jLabel10");
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+                jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel7Layout.createSequentialGroup()
+                                .addGap(26, 26, 26)
+                                .addComponent(jLabel4)
+                                .addGap(26, 26, 26)
+                                .addComponent(jLabel10)
+                                .addContainerGap(237, Short.MAX_VALUE))
+        );
+        jPanel7Layout.setVerticalGroup(
+                jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
+                                .addContainerGap(9, Short.MAX_VALUE)
+                                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel4)
+                                        .addComponent(jLabel10))
+                                .addGap(14, 14, 14))
+        );
+
+        jPanel4.add(jPanel7);
+
+        jLabel5.setText("email: ");
+
+        jLabel11.setText("jLabel11");
+
+        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
+        jPanel8.setLayout(jPanel8Layout);
+        jPanel8Layout.setHorizontalGroup(
+                jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel8Layout.createSequentialGroup()
+                                .addGap(26, 26, 26)
+                                .addComponent(jLabel5)
+                                .addGap(49, 49, 49)
+                                .addComponent(jLabel11)
+                                .addContainerGap(238, Short.MAX_VALUE))
+        );
+        jPanel8Layout.setVerticalGroup(
+                jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel8Layout.createSequentialGroup()
+                                .addContainerGap(9, Short.MAX_VALUE)
+                                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel5)
+                                        .addComponent(jLabel11))
+                                .addGap(14, 14, 14))
+        );
+
+        jPanel4.add(jPanel8);
+
+        jLabel6.setText("강의명: ");
+
+        jLabel12.setText("jLabel12");
+
+        javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
+        jPanel9.setLayout(jPanel9Layout);
+        jPanel9Layout.setHorizontalGroup(
+                jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel9Layout.createSequentialGroup()
+                                .addGap(26, 26, 26)
+                                .addComponent(jLabel6)
+                                .addGap(36, 36, 36)
+                                .addComponent(jLabel12)
+                                .addContainerGap(239, Short.MAX_VALUE))
+        );
+        jPanel9Layout.setVerticalGroup(
+                jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel9Layout.createSequentialGroup()
+                                .addContainerGap(9, Short.MAX_VALUE)
+                                .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel6)
+                                        .addComponent(jLabel12))
+                                .addGap(14, 14, 14))
+        );
+
+        jPanel4.add(jPanel9);
+
+        jLabel7.setText("시험명: ");
+
+        //jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<TestVO>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
+        jPanel10.setLayout(jPanel10Layout);
+        jPanel10Layout.setHorizontalGroup(
+                jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel10Layout.createSequentialGroup()
+                                .addGap(26, 26, 26)
+                                .addComponent(jLabel7)
+                                .addGap(29, 29, 29)
+                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(142, Short.MAX_VALUE))
+        );
+        jPanel10Layout.setVerticalGroup(
+                jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel10Layout.createSequentialGroup()
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(11, 11, 11))
+        );
+
+        jPanel4.add(jPanel10);
+
+        jLabel13.setText("점수: ");
+
+//        jLabel14.setText("jLabel14");
+
+        jButton2.setText("jButton2");
+
+        javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
+        jPanel11.setLayout(jPanel11Layout);
+        jPanel11Layout.setHorizontalGroup(
+                jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel11Layout.createSequentialGroup()
+                                .addGap(97, 97, 97)
+                                .addComponent(jLabel13)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton2)
+                                .addContainerGap(110, Short.MAX_VALUE))
+        );
+        jPanel11Layout.setVerticalGroup(
+                jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel11Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel13)
+                                        .addComponent(jLabel14)
+                                        .addComponent(jButton2))
+                                .addContainerGap(11, Short.MAX_VALUE))
+        );
+
+        jPanel4.add(jPanel11);
+
+        jPanel1.add(jPanel4, java.awt.BorderLayout.CENTER);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        pack();
+    }// </editor-fold>
+
+    // Variables declaration - do not modify
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JComboBox<TestVO> jComboBox1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel10;
+    private javax.swing.JPanel jPanel11;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
+    private javax.swing.JPanel jPanel9;
+    // End of variables declaration
+}
